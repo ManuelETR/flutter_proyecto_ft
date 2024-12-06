@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1029343581609",
+    "project_id": "multiserviciostoledo-8574b",
+    "storage_bucket": "multiserviciostoledo-8574b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029343581609:android:e58d8f909d9e5af54860b8",
+        "android_client_info": {
+          "package_name": "com.example.flutter_proyecto_ft"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQydDhXRkcxphR86k6iapvvBrzt0lYHw8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
