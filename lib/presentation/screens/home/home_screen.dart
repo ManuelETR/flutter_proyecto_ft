@@ -113,7 +113,7 @@ class _CustomListTile extends StatelessWidget {
     return ListTile(
       leading: Icon(menuItem.icon, color: colors.primary, size: 30,),
       trailing: Icon(Icons.arrow_forward_ios_rounded, color: colors.primary),
-      title: Text(menuItem.title, style: TextStyle(fontWeight: FontWeight.bold, color: colors.tertiary),),
+      title: Text(menuItem.title, style: TextStyle(fontWeight: FontWeight.bold, color: colors.secondary),),
       subtitle: Text(menuItem.subTitle),
       onTap: () {
         context.push( menuItem.link);

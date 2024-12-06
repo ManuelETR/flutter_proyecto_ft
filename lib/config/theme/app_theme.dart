@@ -15,7 +15,19 @@ class AppTheme {
 
   AppTheme({this.selectedColor = 0})
       : assert(selectedColor >= 0 && selectedColor <= colorList.length - 1,
-            'Colors must be between 0 and ${colorList.length}');
+            'Colors must be between 0 and ${colorList.length - 1}');
 
-  ThemeData getTheme() => ThemeData(colorSchemeSeed: colorList[selectedColor]);
+  ThemeData getTheme() {
+    final Color selected = colorList[selectedColor];
+
+    return ThemeData(
+      primaryColor: selected,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: selected,
+        primary: selected,
+        secondary: colorList[1], // Puedes elegir otro color o usar un patrón.
+        tertiary: colorList[2], // Personaliza esto según necesites.
+      ),
+    );
+  }
 }
