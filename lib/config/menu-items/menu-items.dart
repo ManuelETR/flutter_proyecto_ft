@@ -43,5 +43,10 @@ const appMenuItems = <MenuItem>[
     icon: Icons.tune_sharp
     ),
 
-
+    MenuItem(
+    title: 'Mision, Vision y Valores', 
+    subTitle: 'Un recorrido por los valores de Multiservicios Toledo', 
+    link: '/mission', 
+    icon: Icons.token_outlined
+    ),
 ];

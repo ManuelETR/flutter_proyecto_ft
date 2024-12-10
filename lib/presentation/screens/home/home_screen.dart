@@ -116,7 +116,7 @@ class _CustomListTile extends StatelessWidget {
       title: Text(menuItem.title, style: TextStyle(fontWeight: FontWeight.bold, color: colors.secondary),),
       subtitle: Text(menuItem.subTitle),
       onTap: () {
-        context.push( menuItem.link);
+        context.push( menuItem.link); 
       },
     );
   }
