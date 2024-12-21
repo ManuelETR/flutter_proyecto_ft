@@ -10,3 +10,25 @@ final colorListProvider = Provider((ref) => colorList);
 
 //Color seleccionado
 final selectedColorProvider = StateProvider<int>((ref) => 0);
+
+//Un objeto de tipo AppTheme (custom)
+final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, AppTheme>(
+    (ref) => ThemeNotifier(),
+  );
+
+//Controller o Notifier
+class ThemeNotifier extends StateNotifier<AppTheme> {
+  
+  //STATE = Estado = new AppTheme(); - nueva instancia.
+  ThemeNotifier(): super(AppTheme());
+  
+
+  void toggleDarkmode(){
+    state = state.copyWith(isDarkmode: !state.isDarkmode);
+  }
+
+  void changeColorIndex(int newIndex){
+    state = state.copyWith(selectedColor: newIndex);
+  }
+
+}
