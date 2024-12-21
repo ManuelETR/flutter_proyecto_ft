@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/presentation/screens/login/login_screen.dart';
 import 'package:flutter_proyecto_ft/services/auth_service.dart';
-import 'package:flutter_proyecto_ft/widgets/login/form_cointainer.dart';
-import 'package:flutter_proyecto_ft/widgets/login/toast.dart';
+import 'package:flutter_proyecto_ft/presentation/widgets/login/form_cointainer.dart';
+import 'package:flutter_proyecto_ft/presentation/widgets/login/toast.dart';
 import 'package:go_router/go_router.dart';
 
 class SignUpPage extends StatefulWidget {

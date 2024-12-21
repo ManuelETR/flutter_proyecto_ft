@@ -10,6 +10,4 @@ class Address {
     required this.neighborhood,
     this.postalCode
     });
-
-  
 }

@@ -1,4 +1,3 @@
-import 'package:flutter_proyecto_ft/presentation/screens/mission_screen/mission_screen.dart';
 import 'package:flutter_proyecto_ft/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
 
@@ -49,6 +48,12 @@ final appRouter = GoRouter(
       path: '/mission',
       name: MissionScreen.name,
       builder: (context, state) => const MissionScreen(),
+    ),
+
+      GoRoute(
+      path: '/themes',
+      name: ThemesScreen.name,
+      builder: (context, state) => const ThemesScreen(),
     ),
   ]
 );

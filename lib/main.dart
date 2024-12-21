@@ -4,6 +4,8 @@ import 'package:flutter_proyecto_ft/config/theme/app_theme.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_proyecto_ft/firebase_options.dart';
+import 'package:flutter_proyecto_ft/presentation/providers/theme_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();  // Asegura que Flutter esté completamente inicializado
@@ -13,19 +15,27 @@ Future<void> main() async {
   } catch (e) {
     print("Error al inicializar Firebase: $e");
   }
-  runApp(const MainApp());  // Ejecuta la aplicación
+
+  runApp(
+    const ProviderScope(
+      child:  MainApp())
+    );  // Ejecuta la aplicación
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    final isDarkmode = ref.watch(isDarkmodeProvider);    
+    final seletedColor = ref.watch(selectedColorProvider);
+    
     return MaterialApp.router(
         title: 'Multiservicios Toledo' ,
         routerConfig: appRouter,
         debugShowCheckedModeBanner: false,
-        theme: AppTheme(selectedColor: 0).getTheme(),
+        theme: AppTheme(selectedColor: seletedColor, isDarkmode: isDarkmode).getTheme(),
         
       );
   }

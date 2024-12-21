@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_proyecto_ft/widgets/login/toast.dart';
+import 'package:flutter_proyecto_ft/presentation/widgets/login/toast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
