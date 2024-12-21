@@ -12,22 +12,31 @@ const colorList = <Color>[
 
 class AppTheme {
   final int selectedColor;
+  final bool isDarkmode;
 
-  AppTheme({this.selectedColor = 0})
-      : assert(selectedColor >= 0 && selectedColor <= colorList.length - 1,
+  AppTheme({
+    this.isDarkmode = false, 
+    this.selectedColor = 0
+    }): assert(selectedColor >= 0 && selectedColor <= colorList.length - 1,
             'Colors must be between 0 and ${colorList.length - 1}');
 
   ThemeData getTheme() {
-    final Color selected = colorList[selectedColor];
 
     return ThemeData(
-      primaryColor: selected,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: selected,
-        primary: selected,
-        secondary: colorList[1], // Puedes elegir otro color o usar un patrón.
-        tertiary: colorList[2], // Personaliza esto según necesites.
-      ),
+      brightness: isDarkmode ? Brightness.dark : Brightness.light,
+      colorSchemeSeed: colorList[selectedColor],
+      appBarTheme: const AppBarTheme(
+        centerTitle: false
+      )
     );
   }
+
+    AppTheme copyWith({
+      int? selectedColor,
+      bool? isDarkmode
+      }) => AppTheme(
+      selectedColor: selectedColor ?? this.selectedColor,
+      isDarkmode: isDarkmode ?? this.isDarkmode
+    );
+
 }
