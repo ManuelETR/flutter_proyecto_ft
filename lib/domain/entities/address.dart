@@ -1,7 +1,7 @@
 class Address {
-  final String street;
-  final String number;
-  final String neighborhood;
+  late String street;
+  late String number;
+  late String neighborhood;
   int? postalCode;
 
   Address({
