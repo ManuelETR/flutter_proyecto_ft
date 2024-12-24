@@ -2,10 +2,10 @@ import 'package:flutter_proyecto_ft/domain/entities/address.dart';
 
 class Client{
   final int id;
-  final String names;
-  final String lastNames;
+  late  String names;
+  late  String lastNames;
   String? tel;
-  final Address address;
+  late Address address;
 
   Client({
     required this.id, 
