@@ -15,6 +15,10 @@ class ClientScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/home'), // Navega explícitamente a la ruta de Home
+        ),
         title: const Text(
           'Clientes y Trabajos',
           style: TextStyle(fontWeight: FontWeight.bold),
