@@ -25,6 +25,10 @@ class _RegisterClientScreenState extends ConsumerState<RegisterClientScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Registrar Cliente', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: const Color.fromARGB(255, 222, 220, 219),
+      ),
       body: ClientForm(
         onSave: _saveClient,
         onClientCreated: () => _showSuccessMessage(context),
