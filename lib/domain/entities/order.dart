@@ -1,13 +1,13 @@
 import 'package:flutter_proyecto_ft/domain/entities/client.dart';
 
-class Order{
+class OrderC{
   final int id;
   final Client client;
   final String frendlyId;   
   final DateTime date;
   String? invoiceNumber;
 
-  Order({
+  OrderC({
     required this.id, 
     required this.frendlyId, 
     required this.date,

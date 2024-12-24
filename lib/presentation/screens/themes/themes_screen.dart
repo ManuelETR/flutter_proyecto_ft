@@ -11,6 +11,7 @@ class ThemesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    
     final bool isDarkmode = ref.watch(themeNotifierProvider).isDarkmode;
 
     return Scaffold(

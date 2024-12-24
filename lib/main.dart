@@ -31,7 +31,7 @@ class MainApp extends ConsumerWidget {
     final AppTheme appTheme = ref.watch(themeNotifierProvider);
 
     return MaterialApp.router(
-        title: 'Multiservicios Toledo' ,
+        title: 'Multiservicios Toledo',
         routerConfig: appRouter,
         debugShowCheckedModeBanner: false,
         theme: appTheme.getTheme(),

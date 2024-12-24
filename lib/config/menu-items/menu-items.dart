@@ -18,23 +18,23 @@ class MenuItem {
 
 // Opciones principales
 const appMenuItemsMain = <MenuItem>[
+    MenuItem(
+    title: 'Registrar',
+    subTitle: 'Registro de Instalación o Registro de Mantenimiento.',
+    link: '/register',
+    icon: Icons.app_registration_sharp,
+  ),
   MenuItem(
-    title: 'Ver Clientes',
-    subTitle: 'Mostrar la lista de clientes registrados y permitir ver o agregar nuevos clientes.',
+    title: 'Clientes y Trabajos',
+    subTitle: 'Trabajos Pendientes e Historial',
     link: '/clients',
     icon: Icons.assignment_ind_sharp,
   ),
   MenuItem(
-    title: 'Registrar Producto',
-    subTitle: 'Registrar un nuevo producto o ver detalles de un producto existente.',
-    link: '/products',
-    icon: Icons.app_registration_rounded,
-  ),
-  MenuItem(
-    title: 'Ver Mantenimientos',
-    subTitle: 'Mostrar mantenimientos programados y gestionar notificaciones.',
-    link: '/maintenance',
-    icon: Icons.assignment,
+    title: 'Calendario de Trabajo',
+    subTitle: 'Citas futuras y Estado de cada trabajo',
+    link: '/calendar',
+    icon: Icons.edit_calendar_rounded,
   ),
 ];
 

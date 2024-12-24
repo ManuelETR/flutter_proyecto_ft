@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class MaintenanceScreen extends StatelessWidget {
+class RegisterMaintenanceScreen extends StatelessWidget {
 
-  static const String name = "maintenance_screen";
+  static const String name = "calendar_screen";
 
-  const MaintenanceScreen({super.key});
+  const RegisterMaintenanceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
