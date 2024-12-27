@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/data/models/product_model.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,9 +9,9 @@ class ProductFormWidget extends StatefulWidget {
   final ValueChanged<ProductModel?>? onProductChanged;
 
   const ProductFormWidget({
-    Key? key,
+    super.key,
     this.onProductChanged,
-  }) : super(key: key);
+  });
 
   @override
   _ProductFormWidgetState createState() => _ProductFormWidgetState();
@@ -20,7 +22,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   String? _name;
   String? _description;
   String? _brand;
-  Map<String, String> _details = {};
+  final Map<String, String> _details = {};
   File? _imageFile;
 
   Future<void> _pickImage() async {

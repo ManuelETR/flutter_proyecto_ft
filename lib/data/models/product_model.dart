@@ -4,20 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductModel extends Product {
   ProductModel({
-    required int id,
-    required String name,
-    String? description,
-    String? brand,
-    Map<String, String>? details,
-    String? photo,
-  }) : super(
-          id: id,
-          name: name,
-          description: description,
-          brand: brand,
-          details: details,
-          photo: photo,
-        );
+    required super.id,
+    required super.name,
+    super.description,
+    super.brand,
+    super.details,
+    super.photo,
+  });
 
   // Convertir el modelo de datos a un mapa para Firestore
   Map<String, dynamic> toMap() {

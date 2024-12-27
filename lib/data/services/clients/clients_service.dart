@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 
 class ClientService {
@@ -9,7 +10,9 @@ class ClientService {
     try {
       await _db.collection('clients').doc(client.id.toString()).set(client.toMap());
     } catch (e) {
-      print("Error adding client: $e");
+      if (kDebugMode) {
+        print("Error adding client: $e");
+      }
     }
   }
 
@@ -21,7 +24,9 @@ class ClientService {
         return ClientModel.fromFirestore(snapshot);
       }
     } catch (e) {
-      print("Error fetching client: $e");
+      if (kDebugMode) {
+        print("Error fetching client: $e");
+      }
     }
     return null;
   }
@@ -32,7 +37,9 @@ class ClientService {
       QuerySnapshot snapshot = await _db.collection('clients').get();
       return snapshot.docs.map((doc) => ClientModel.fromFirestore(doc)).toList();
     } catch (e) {
-      print("Error fetching all clients: $e");
+      if (kDebugMode) {
+        print("Error fetching all clients: $e");
+      }
       return [];
     }
   }
@@ -42,7 +49,9 @@ class ClientService {
     try {
       await _db.collection('clients').doc(clientId.toString()).delete();
     } catch (e) {
-      print("Error deleting client: $e");
+      if (kDebugMode) {
+        print("Error deleting client: $e");
+      }
     }
   }
 }

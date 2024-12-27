@@ -124,10 +124,12 @@ class _ClientTile extends StatelessWidget {
     );
 
     if (confirm == true) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Cliente con ID $clientId eliminado')),
       );
       // Eliminar cliente del estado
+      // ignore: use_build_context_synchronously
       final ref = ProviderScope.containerOf(context);
       ref.read(clientListProvider.notifier).removeClient(clientId);
     }

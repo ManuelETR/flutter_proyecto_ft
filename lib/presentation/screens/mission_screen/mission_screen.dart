@@ -116,7 +116,7 @@ class _Slide extends StatelessWidget {
   final String caption;
   final String imageUrl;
 
-  const _Slide({super.key, required this.title, required this.caption, required this.imageUrl});
+  const _Slide({required this.title, required this.caption, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 import 'package:flutter_proyecto_ft/data/services/clients/clients_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +27,9 @@ class ClientListNotifier extends StateNotifier<AsyncValue<List<ClientModel>>> {
     } catch (e, stack) {
       // Cambia el estado a `error` si ocurre un problema
       state = AsyncValue.error(e, stack);
-      print("Error loading clients: $e");
+      if (kDebugMode) {
+        print("Error loading clients: $e");
+      }
     }
   }
 
@@ -39,7 +42,9 @@ class ClientListNotifier extends StateNotifier<AsyncValue<List<ClientModel>>> {
         state = AsyncValue.data([...clients, client]);
       });
     } catch (e, stack) {
-      print("Error adding client: $e");
+      if (kDebugMode) {
+        print("Error adding client: $e");
+      }
       state = AsyncValue.error(e, stack);
     }
   }
@@ -53,7 +58,9 @@ class ClientListNotifier extends StateNotifier<AsyncValue<List<ClientModel>>> {
         state = AsyncValue.data(clients.where((client) => client.id != clientId).toList());
       });
     } catch (e, stack) {
-      print("Error removing client: $e");
+      if (kDebugMode) {
+        print("Error removing client: $e");
+      }
       state = AsyncValue.error(e, stack);
     }
   }

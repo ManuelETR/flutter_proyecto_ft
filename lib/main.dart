@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/config/router/app_router.dart';
 import 'package:flutter_proyecto_ft/config/theme/app_theme.dart';
@@ -11,9 +12,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();  // Asegura que Flutter esté completamente inicializado
   try {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  // Inicializa Firebase
-    print("Firebase inicializado correctamente");  // Mensaje de confirmación
+    if (kDebugMode) {
+      print("Firebase inicializado correctamente");
+    }  // Mensaje de confirmación
   } catch (e) {
-    print("Error al inicializar Firebase: $e");
+    if (kDebugMode) {
+      print("Error al inicializar Firebase: $e");
+    }
   }
 
   runApp(

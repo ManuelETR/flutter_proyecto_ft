@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
@@ -9,7 +11,7 @@ import 'package:go_router/go_router.dart';
 class ClientDetailScreen extends StatefulWidget {
   final ClientModel client;
 
-  const ClientDetailScreen({Key? key, required this.client}) : super(key: key);
+  const ClientDetailScreen({super.key, required this.client});
 
   @override
   _ClientDetailScreenState createState() => _ClientDetailScreenState();

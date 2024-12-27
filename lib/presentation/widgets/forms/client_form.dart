@@ -10,11 +10,11 @@ class ClientForm extends ConsumerStatefulWidget {
   final VoidCallback onClientCreated;
 
   const ClientForm({
-    Key? key,
+    super.key,
     this.existingClient,
     required this.onSave,
     required this.onClientCreated,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<ClientForm> createState() => _ClientFormState();

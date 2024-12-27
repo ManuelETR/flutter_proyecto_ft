@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/domain/entities/order.dart';
 import 'package:flutter_proyecto_ft/domain/entities/product.dart';
@@ -14,13 +16,13 @@ class MaintenanceFormWidget extends StatefulWidget {
   final ValueChanged<String?>? onNotesChanged;
 
   const MaintenanceFormWidget({
-    Key? key,
+    super.key,
     this.onOrderChanged,
     this.onProductChanged,
     this.onStatusChanged,
     this.onScheduleDateChanged,
     this.onNotesChanged,
-  }) : super(key: key);
+  });
 
   @override
   _MaintenanceFormWidgetState createState() => _MaintenanceFormWidgetState();

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
 
 class OrdersService {
@@ -9,7 +10,9 @@ class OrdersService {
       QuerySnapshot snapshot = await _db.collection('orders').where('clientId', isEqualTo: clientId).get();
       return snapshot.docs.map((doc) => OrderModel.fromFirestore(doc)).toList();
     } catch (e) {
-      print("Error fetching client orders: $e");
+      if (kDebugMode) {
+        print("Error fetching client orders: $e");
+      }
       return [];
     }
   }

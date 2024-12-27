@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, unused_element
+
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/presentation/providers/installation_provider.dart';
 import 'package:flutter_proyecto_ft/presentation/widgets/forms/installation_form.dart';
@@ -97,10 +99,6 @@ class _RegisterInstallationScreenState
             });
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _saveInstallation,
-        child: const Icon(Icons.save),
       ),
     );
   }

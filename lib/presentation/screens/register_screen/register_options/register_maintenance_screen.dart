@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/presentation/providers/maintenance_provider.dart';
 import 'package:flutter_proyecto_ft/presentation/widgets/forms/maintenance_form.dart';
@@ -7,7 +9,6 @@ import 'package:flutter_proyecto_ft/domain/entities/statusType.dart';
 import 'package:flutter_proyecto_ft/domain/entities/client.dart';
 import 'package:flutter_proyecto_ft/data/models/maintenance_model.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
-import 'package:flutter_proyecto_ft/data/models/product_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterMaintenanceScreen extends ConsumerStatefulWidget {
@@ -92,10 +93,6 @@ class _RegisterMaintenanceScreenState
             });
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _saveMaintenance,
-        child: const Icon(Icons.save),
       ),
     );
   }
