@@ -1,6 +1,8 @@
 
 //Screens//
 //Screens//
+export 'package:flutter_proyecto_ft/presentation/screens/register_screen/register_options/register_product_screen.dart';
+
 export 'package:flutter_proyecto_ft/presentation/screens/clients/clients-options/client_detail.dart';
 
 export 'package:flutter_proyecto_ft/presentation/screens/register_screen/register_options/register_client_screen.dart';
@@ -20,5 +22,4 @@ export 'package:flutter_proyecto_ft/presentation/screens/calendar/calendar_scree
 export 'package:flutter_proyecto_ft/presentation/screens/mission_screen/mission_screen.dart';
 export 'package:flutter_proyecto_ft/presentation/screens/register_screen/register_screen.dart';
 export 'package:flutter_proyecto_ft/presentation/screens/themes/themes_screen.dart';
-
 

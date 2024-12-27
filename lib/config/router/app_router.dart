@@ -57,6 +57,11 @@ final appRouter = GoRouter(
       builder: (context, state) => const RegisterClientScreen(),
     ),
     GoRoute(
+      path: '/register-product',
+      name: 'register-product',
+      builder: (context, state) => const RegisterProductScreen(),
+    ),
+    GoRoute(
       path: '/register-installation',
       name: 'register_installation',
       builder: (context, state) => const RegisterInstallationScreen(),

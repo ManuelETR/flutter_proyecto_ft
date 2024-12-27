@@ -1,42 +1,33 @@
+import 'package:flutter_proyecto_ft/data/models/product_model.dart';
+import 'package:flutter_proyecto_ft/data/repositories/product_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_proyecto_ft/domain/entities/product.dart';
 
-class ProductService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+class FirestoreProductService implements ProductRepository {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // Crear un nuevo producto
-  Future<void> addProduct(Product product) async {
-    try {
-      await _db.collection('products').doc(product.id.toString()).set({
-        'name': product.name,
-        'description': product.description,
-        'brand': product.brand,
-        'details': product.details,
-        'photo': product.photo,
-      });
-    } catch (e) {
-      print("Error adding product: $e");
-    }
+  @override
+  Future<void> createProduct(ProductModel product) async {
+    var productRef = firestore.collection('products').doc();
+    await productRef.set(product.toMap());
   }
 
-  // Obtener un producto por ID
-  Future<Product?> getProduct(int id) async {
-    try {
-      DocumentSnapshot snapshot = await _db.collection('products').doc(id.toString()).get();
-      if (snapshot.exists) {
-        var data = snapshot.data() as Map<String, dynamic>;
-        return Product(
-          id: id,
-          name: data['name'],
-          description: data['description'],
-          brand: data['brand'],
-          details: Map<String, String>.from(data['details'] ?? {}),
-          photo: data['photo'],
-        );
-      }
-    } catch (e) {
-      print("Error fetching product: $e");
-    }
-    return null;
+  @override
+  Future<List<ProductModel>> getProducts() async {
+    var querySnapshot = await firestore.collection('products').get();
+    return querySnapshot.docs
+        .map((doc) => ProductModel.fromFirestore(doc))
+        .toList();
+  }
+
+  @override
+  Future<void> updateProduct(ProductModel product) async {
+    var productRef = firestore.collection('products').doc(product.id.toString());
+    await productRef.update(product.toMap());
+  }
+
+  @override
+  Future<void> deleteProduct(int id) async {
+    var productRef = firestore.collection('products').doc(id.toString());
+    await productRef.delete();
   }
 }

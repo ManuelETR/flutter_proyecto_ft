@@ -22,6 +22,12 @@ const registerMenuItems = <RegisterMenuItem>[
     link: '/register-client',
     icon: Icons.person_add_alt_1,
   ),
+    RegisterMenuItem(
+    title: 'Registrar Producto',
+    subTitle: 'Registrar un nuevo producto.',
+    link: '/register-product',
+    icon: Icons.all_inbox_rounded,
+  ),
   RegisterMenuItem(
     title: 'Registro de Instalación',
     subTitle: 'Registrar una nueva instalación de aire acondicionado.',

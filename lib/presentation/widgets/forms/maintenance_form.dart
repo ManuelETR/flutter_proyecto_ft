@@ -6,14 +6,14 @@ import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 import 'package:flutter_proyecto_ft/data/models/product_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class InstallationFormWidget extends StatefulWidget {
+class MaintenanceFormWidget extends StatefulWidget {
   final ValueChanged<OrderC?>? onOrderChanged;
   final ValueChanged<Product?>? onProductChanged;
   final ValueChanged<StatusType?>? onStatusChanged;
   final ValueChanged<DateTime?>? onScheduleDateChanged;
   final ValueChanged<String?>? onNotesChanged;
 
-  const InstallationFormWidget({
+  const MaintenanceFormWidget({
     Key? key,
     this.onOrderChanged,
     this.onProductChanged,
@@ -23,10 +23,10 @@ class InstallationFormWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _InstallationFormWidgetState createState() => _InstallationFormWidgetState();
+  _MaintenanceFormWidgetState createState() => _MaintenanceFormWidgetState();
 }
 
-class _InstallationFormWidgetState extends State<InstallationFormWidget> {
+class _MaintenanceFormWidgetState extends State<MaintenanceFormWidget> {
   List<ClientModel> clients = [];
   List<ProductModel> products = [];
   ClientModel? selectedClient;
@@ -164,10 +164,10 @@ class _InstallationFormWidgetState extends State<InstallationFormWidget> {
                 onPressed: () {
                   // Aquí puedes manejar el evento de guardar
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Instalación registrada')),
+                    const SnackBar(content: Text('Mantenimiento registrado')),
                   );
                 },
-                child: const Text('Guardar Instalación'),
+                child: const Text('Guardar Mantenimiento'),
               ),
             ),
           ],
