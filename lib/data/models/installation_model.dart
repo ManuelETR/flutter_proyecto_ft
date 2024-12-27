@@ -6,21 +6,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InstallationModel extends Installation {
   InstallationModel({
-    required int id,
-    required OrderModel order,  // Aquí usas 'OrderModel' porque estás trabajando con el modelo
-    required ProductModel product,
-    DateTime? scheduleDate,
-    DateTime? completionDate,
-    String? notes,
-    StatusType status = StatusType.pending,
+    required super.id,
+    required OrderModel order,
+    required ProductModel super.product,
+    super.scheduleDate,
+    super.completionDate,
+    super.notes,
+    super.status,
   }) : super(
-          id: id,
-          order: order.toOrderC(),  // Convierte 'order' a 'OrderC'
-          product: product,
-          scheduleDate: scheduleDate,
-          completionDate: completionDate,
-          notes: notes,
-          status: status,  // Pasa el parámetro 'status'
+          order: order.toOrderC(),
         );
 
   // Convertir de Firestore a un objeto InstallationModel
@@ -28,10 +22,10 @@ class InstallationModel extends Installation {
     var data = doc.data() as Map<String, dynamic>;
     return InstallationModel(
       id: data['id'],
-      order: OrderModel.fromFirestore(data['order']),  // Convierte 'order' correctamente
+      order: OrderModel.fromFirestore(data['order']),
       product: ProductModel.fromFirestore(data['product']),
-      scheduleDate: (data['scheduleDate'] as Timestamp).toDate(),
-      completionDate: (data['completionDate'] as Timestamp).toDate(),
+      scheduleDate: (data['scheduleDate'] as Timestamp?)?.toDate(),
+      completionDate: (data['completionDate'] as Timestamp?)?.toDate(),
       notes: data['notes'],
       status: StatusType.values[data['status']],
     );
@@ -41,12 +35,12 @@ class InstallationModel extends Installation {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'order': (order as OrderModel).toMap(),  // Convierte 'order' correctamente
+      'order': (order as OrderModel).toMap(),
       'product': (product as ProductModel).toMap(),
       'scheduleDate': scheduleDate,
       'completionDate': completionDate,
       'notes': notes,
-      'status': status.index,  // Convierte 'status' correctamente
+      'status': status.index,
     };
   }
 }

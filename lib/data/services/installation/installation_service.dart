@@ -1,6 +1,8 @@
-// data/services/firestore_installation_service.dart
 import 'package:flutter_proyecto_ft/data/models/installation_model.dart';
+import 'package:flutter_proyecto_ft/data/models/order_model.dart';
+import 'package:flutter_proyecto_ft/data/models/product_model.dart';
 import 'package:flutter_proyecto_ft/domain/entities/installation.dart';
+import 'package:flutter_proyecto_ft/domain/entities/order.dart';
 import 'package:flutter_proyecto_ft/domain/repositories/installation_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,12 +11,32 @@ class FirestoreInstallationService implements InstallationRepository {
 
   @override
   Future<void> createInstallation(Installation installation) async {
+    // Crear una nueva orden
+    var orderRef = firestore.collection('orders').doc();
+    var order = OrderModel.fromOrderC(OrderC(
+      id: orderRef.id.hashCode, // Usar hashCode para generar un ID único
+      frendlyId: 'ORD-${orderRef.id}',
+      date: DateTime.now(),
+      client: installation.order.client,
+    ));
+    await orderRef.set(order.toMap());
+
+    // Crear una nueva instalación
     var installationRef = firestore.collection('installations').doc();
-    await installationRef.set((installation as InstallationModel).toMap());
+    var installationModel = InstallationModel(
+      id: installationRef.id.hashCode, // Usar hashCode para generar un ID único
+      order: order,
+      product: installation.product as ProductModel,
+      scheduleDate: installation.scheduleDate,
+      completionDate: installation.completionDate,
+      notes: installation.notes,
+      status: installation.status,
+    );
+    await installationRef.set(installationModel.toMap());
   }
 
   @override
-  Future<List<Installation>> getInstallations() async {
+  Future<List<InstallationModel>> getInstallations() async {
     var querySnapshot = await firestore.collection('installations').get();
     return querySnapshot.docs
         .map((doc) => InstallationModel.fromFirestore(doc))

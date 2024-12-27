@@ -1,20 +1,13 @@
-
-
-
-
-
-
-
-
-//PROVISIONAL
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_proyecto_ft/domain/entities/address.dart';
 import 'package:flutter_proyecto_ft/domain/entities/order.dart';
 import 'package:flutter_proyecto_ft/domain/entities/product.dart';
 import 'package:flutter_proyecto_ft/domain/entities/statusType.dart';
+import 'package:flutter_proyecto_ft/domain/entities/client.dart';
+import 'package:flutter_proyecto_ft/data/models/client_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class InstallationFormWidget extends StatelessWidget {
+class InstallationFormWidget extends StatefulWidget {
   final ValueChanged<OrderC?>? onOrderChanged;
   final ValueChanged<Product?>? onProductChanged;
   final ValueChanged<StatusType?>? onStatusChanged;
@@ -27,8 +20,31 @@ class InstallationFormWidget extends StatelessWidget {
     this.onProductChanged,
     this.onStatusChanged,
     this.onScheduleDateChanged,
-    this.onNotesChanged, required GlobalKey<FormState> formKey, required TextEditingController clientController, required TextEditingController locationController, required TextEditingController descriptionController, required void Function() onSave,
+    this.onNotesChanged,
   }) : super(key: key);
+
+  @override
+  _InstallationFormWidgetState createState() => _InstallationFormWidgetState();
+}
+
+class _InstallationFormWidgetState extends State<InstallationFormWidget> {
+  List<ClientModel> clients = [];
+  ClientModel? selectedClient;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchClients();
+  }
+
+  Future<void> _fetchClients() async {
+    var querySnapshot = await FirebaseFirestore.instance.collection('clients').get();
+    setState(() {
+      clients = querySnapshot.docs.map((doc) {
+        return ClientModel.fromFirestore(doc);
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +54,23 @@ class InstallationFormWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dropdown para seleccionar la orden
-            DropdownButtonFormField<OrderC>(
+            // Dropdown para seleccionar el cliente
+            DropdownButtonFormField<ClientModel>(
               decoration: const InputDecoration(
-                labelText: 'Orden',
+                labelText: 'Cliente',
                 border: OutlineInputBorder(),
               ),
-              items: [
-              ],
-              onChanged: onOrderChanged,
+              items: clients.map((client) {
+                return DropdownMenuItem(
+                  value: client,
+                  child: Text(client.names),
+                );
+              }).toList(),
+              onChanged: (client) {
+                setState(() {
+                  selectedClient = client;
+                });
+              },
             ),
             const SizedBox(height: 16),
 
@@ -67,7 +91,7 @@ class InstallationFormWidget extends StatelessWidget {
                   child: const Text('Calefactor'),
                 ),
               ],
-              onChanged: onProductChanged,
+              onChanged: widget.onProductChanged,
             ),
             const SizedBox(height: 16),
 
@@ -83,7 +107,7 @@ class InstallationFormWidget extends StatelessWidget {
                   child: Text(status.toString().split('.').last),
                 );
               }).toList(),
-              onChanged: onStatusChanged,
+              onChanged: widget.onStatusChanged,
             ),
             const SizedBox(height: 16),
 
@@ -96,7 +120,7 @@ class InstallationFormWidget extends StatelessWidget {
                   firstDate: DateTime.now().subtract(const Duration(days: 365)),
                   lastDate: DateTime.now().add(const Duration(days: 365)),
                 );
-                onScheduleDateChanged?.call(selectedDate);
+                widget.onScheduleDateChanged?.call(selectedDate);
               },
               child: InputDecorator(
                 decoration: const InputDecoration(
@@ -124,7 +148,7 @@ class InstallationFormWidget extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
-              onChanged: onNotesChanged,
+              onChanged: widget.onNotesChanged,
             ),
             const SizedBox(height: 16),
 

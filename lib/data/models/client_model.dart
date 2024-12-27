@@ -4,18 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClientModel extends Client {
   ClientModel({
-    required int id,
-    required String names,
-    required String lastNames,
-    required AddressModel address,
-    String? tel, required name,
-  }) : super(
-          id: id,
-          names: names,
-          lastNames: lastNames,
-          address: address,
-          tel: tel,
-        );
+    required super.id,
+    required super.names,
+    required super.lastNames,
+    required AddressModel super.address,
+    super.tel, required name,
+  });
 
   // Convertir el modelo de datos a un mapa para Firestore
   Map<String, dynamic> toMap() {
