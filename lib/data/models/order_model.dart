@@ -44,7 +44,7 @@ class OrderModel {
     return OrderModel(
       id: order.id,
       clientId: order.client.id,
-      friendlyId: order.frendlyId,
+      friendlyId: order.friendlyId ?? '',
       date: order.date,
       invoiceNumber: order.invoiceNumber,
     );
@@ -66,7 +66,7 @@ class OrderModel {
       ),
       frendlyId: friendlyId,
       date: date,
-      invoiceNumber: invoiceNumber,
+      invoiceNumber: invoiceNumber, friendlyId: '',
     );
   }
 }

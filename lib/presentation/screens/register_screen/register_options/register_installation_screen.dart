@@ -1,12 +1,9 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, unused_element
-
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/presentation/providers/installation_provider.dart';
 import 'package:flutter_proyecto_ft/presentation/widgets/forms/installation_form.dart';
 import 'package:flutter_proyecto_ft/domain/entities/order.dart';
 import 'package:flutter_proyecto_ft/domain/entities/product.dart';
 import 'package:flutter_proyecto_ft/domain/entities/statusType.dart';
-import 'package:flutter_proyecto_ft/domain/entities/client.dart';
 import 'package:flutter_proyecto_ft/data/models/installation_model.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
 import 'package:flutter_proyecto_ft/data/models/product_model.dart';
@@ -25,7 +22,7 @@ class RegisterInstallationScreen extends ConsumerStatefulWidget {
 class _RegisterInstallationScreenState
     extends ConsumerState<RegisterInstallationScreen> {
   final _formKey = GlobalKey<FormState>();
-  Client? _selectedClient;
+  OrderModel? _selectedOrder;
   Product? _selectedProduct;
   StatusType? _selectedStatus;
   DateTime? _selectedScheduleDate;
@@ -33,17 +30,10 @@ class _RegisterInstallationScreenState
 
   void _saveInstallation() async {
     if (_formKey.currentState?.validate() ?? false) {
-      if (_selectedClient != null && _selectedProduct != null) {
-        final order = OrderC(
-          id: DateTime.now().millisecondsSinceEpoch,
-          frendlyId: 'ORD-${DateTime.now().millisecondsSinceEpoch}',
-          date: DateTime.now(),
-          client: _selectedClient!,
-        );
-
+      if (_selectedOrder != null && _selectedProduct != null) {
         final installation = InstallationModel(
           id: DateTime.now().millisecondsSinceEpoch,
-          order: OrderModel.fromOrderC(order),
+          order: _selectedOrder!,
           product: ProductModel(
             id: _selectedProduct!.id,
             name: _selectedProduct!.name,
@@ -62,7 +52,7 @@ class _RegisterInstallationScreenState
         _formKey.currentState?.reset();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Por favor, selecciona un cliente y un producto')),
+          const SnackBar(content: Text('Por favor, selecciona una orden y un producto')),
         );
       }
     }
@@ -77,7 +67,11 @@ class _RegisterInstallationScreenState
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: InstallationFormWidget(
-          onOrderChanged: (order) {},
+          onOrderChanged: (order) {
+            setState(() {
+              _selectedOrder = order;
+            });
+          },
           onProductChanged: (product) {
             setState(() {
               _selectedProduct = product;
@@ -99,6 +93,10 @@ class _RegisterInstallationScreenState
             });
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _saveInstallation,
+        child: const Icon(Icons.save),
       ),
     );
   }

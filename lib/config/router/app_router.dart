@@ -53,37 +53,42 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/register-client',
-      name: 'register_client_screen',
+      name: RegisterClientScreen.name,
       builder: (context, state) => const RegisterClientScreen(),
     ),
     GoRoute(
       path: '/register-product',
-      name: 'register-product',
+      name: RegisterProductScreen.name,
       builder: (context, state) => const RegisterProductScreen(),
     ),
     GoRoute(
+      path: '/register-order',
+      name: RegisterOrderScreen.name,
+      builder: (context, state) => const RegisterOrderScreen(),
+    ),
+    GoRoute(
       path: '/register-installation',
-      name: 'register_installation',
+      name: RegisterInstallationScreen.name,
       builder: (context, state) => const RegisterInstallationScreen(),
     ),
     GoRoute(
       path: '/register-maintenance',
-      name: 'register_maintenance',
+      name: RegisterMaintenanceScreen.name,
       builder: (context, state) => const RegisterMaintenanceScreen(),
     ),
     GoRoute(
       path: '/clients-pending',
-      name: 'clients_pending',
+      name: ClientsPendingScreen.name,
       builder: (context, state) => const ClientsPendingScreen(),
     ),
     GoRoute(
       path: '/clients-history',
-      name: 'clients_history',
+      name: ClientsHistoryScreen.name,
       builder: (context, state) => const ClientsHistoryScreen(),
     ),
     GoRoute(
       path: '/clients-detail',
-      name: 'clients-detail',
+      name: ClientDetailScreen.name,
       builder: (context, state) {
         final client = state.extra as ClientModel?;
         if (client == null) {

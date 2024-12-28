@@ -24,6 +24,12 @@ const registerMenuItems = <RegisterMenuItem>[
     link: '/register-client',
     icon: Icons.person_add_alt_1,
   ),
+   RegisterMenuItem(
+    title: 'Registrar Orden de Trabajo',
+    subTitle: 'Registrar una nueva orden de trabajo.',
+    link: '/register-order',
+    icon: Icons.note_alt_rounded,
+  ),
     RegisterMenuItem(
     title: 'Registrar Producto',
     subTitle: 'Registrar un nuevo producto.',

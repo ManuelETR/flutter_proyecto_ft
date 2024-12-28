@@ -15,9 +15,9 @@ class FirestoreInstallationService implements InstallationRepository {
     var orderRef = firestore.collection('orders').doc();
     var order = OrderModel.fromOrderC(OrderC(
       id: orderRef.id.hashCode, // Usar hashCode para generar un ID único
-      frendlyId: 'ORD-${orderRef.id}',
+      friendlyId: 'ORD-${orderRef.id}',
       date: DateTime.now(),
-      client: installation.order.client,
+      client: installation.order.client, frendlyId: '',
     ));
     await orderRef.set(order.toMap());
 
@@ -38,9 +38,8 @@ class FirestoreInstallationService implements InstallationRepository {
   @override
   Future<List<InstallationModel>> getInstallations() async {
     var querySnapshot = await firestore.collection('installations').get();
-    return querySnapshot.docs
-        .map((doc) => InstallationModel.fromFirestore(doc))
-        .toList();
+    var installations = await Future.wait(querySnapshot.docs.map((doc) => InstallationModel.fromFirestoreAsync(doc)).toList());
+    return installations;
   }
 
   @override

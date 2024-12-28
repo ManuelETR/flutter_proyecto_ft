@@ -1,15 +1,13 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/domain/entities/order.dart';
 import 'package:flutter_proyecto_ft/domain/entities/product.dart';
 import 'package:flutter_proyecto_ft/domain/entities/statusType.dart';
-import 'package:flutter_proyecto_ft/data/models/client_model.dart';
+import 'package:flutter_proyecto_ft/data/models/order_model.dart';
 import 'package:flutter_proyecto_ft/data/models/product_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InstallationFormWidget extends StatefulWidget {
-  final ValueChanged<OrderC?>? onOrderChanged;
+  final ValueChanged<OrderModel?>? onOrderChanged;
   final ValueChanged<Product?>? onProductChanged;
   final ValueChanged<StatusType?>? onStatusChanged;
   final ValueChanged<DateTime?>? onScheduleDateChanged;
@@ -29,22 +27,22 @@ class InstallationFormWidget extends StatefulWidget {
 }
 
 class _InstallationFormWidgetState extends State<InstallationFormWidget> {
-  List<ClientModel> clients = [];
+  List<OrderModel> orders = [];
   List<ProductModel> products = [];
-  ClientModel? selectedClient;
+  OrderModel? selectedOrder;
 
   @override
   void initState() {
     super.initState();
-    _fetchClients();
+    _fetchOrders();
     _fetchProducts();
   }
 
-  Future<void> _fetchClients() async {
-    var querySnapshot = await FirebaseFirestore.instance.collection('clients').get();
+  Future<void> _fetchOrders() async {
+    var querySnapshot = await FirebaseFirestore.instance.collection('orders').get();
     setState(() {
-      clients = querySnapshot.docs.map((doc) {
-        return ClientModel.fromFirestore(doc);
+      orders = querySnapshot.docs.map((doc) {
+        return OrderModel.fromFirestore(doc);
       }).toList();
     });
   }
@@ -66,22 +64,23 @@ class _InstallationFormWidgetState extends State<InstallationFormWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dropdown para seleccionar el cliente
-            DropdownButtonFormField<ClientModel>(
+            // Dropdown para seleccionar la orden
+            DropdownButtonFormField<OrderModel>(
               decoration: const InputDecoration(
-                labelText: 'Cliente',
+                labelText: 'Orden',
                 border: OutlineInputBorder(),
               ),
-              items: clients.map((client) {
+              items: orders.map((order) {
                 return DropdownMenuItem(
-                  value: client,
-                  child: Text(client.names),
+                  value: order,
+                  child: Text(order.friendlyId ?? ''),
                 );
               }).toList(),
-              onChanged: (client) {
+              onChanged: (order) {
                 setState(() {
-                  selectedClient = client;
+                  selectedOrder = order;
                 });
+                widget.onOrderChanged?.call(order);
               },
             ),
             const SizedBox(height: 16),

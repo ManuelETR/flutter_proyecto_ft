@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
@@ -9,9 +7,11 @@ import 'package:flutter_proyecto_ft/presentation/widgets/forms/client_form.dart'
 import 'package:go_router/go_router.dart';
 
 class ClientDetailScreen extends StatefulWidget {
+    static const String name = "client_detail_screen";
+
   final ClientModel client;
 
-  const ClientDetailScreen({super.key, required this.client});
+  const ClientDetailScreen({Key? key, required this.client}) : super(key: key);
 
   @override
   _ClientDetailScreenState createState() => _ClientDetailScreenState();
@@ -19,7 +19,7 @@ class ClientDetailScreen extends StatefulWidget {
 
 class _ClientDetailScreenState extends State<ClientDetailScreen> {
   Future<List<OrderModel>> fetchClientOrders(int clientId) async {
-    return await OrdersService().getClientOrders(clientId);
+    return await OrderService().getClientOrders(clientId);
   }
 
   Future<void> _refreshClient() async {

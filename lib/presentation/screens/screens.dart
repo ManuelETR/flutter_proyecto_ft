@@ -1,6 +1,8 @@
 
 //Screens//
 //Screens//
+export 'package:flutter_proyecto_ft/presentation/screens/register_screen/register_options/register_order_screen.dart';
+
 export 'package:flutter_proyecto_ft/presentation/screens/register_screen/register_options/register_product_screen.dart';
 
 export 'package:flutter_proyecto_ft/presentation/screens/clients/clients-options/client_detail.dart';

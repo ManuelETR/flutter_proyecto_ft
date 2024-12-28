@@ -37,7 +37,7 @@ class _RegisterMaintenanceScreenState
           id: DateTime.now().millisecondsSinceEpoch,
           frendlyId: 'ORD-${DateTime.now().millisecondsSinceEpoch}',
           date: DateTime.now(),
-          client: _selectedClient!,
+          client: _selectedClient!, friendlyId: '',
         );
 
         final maintenance = MaintenanceModel(

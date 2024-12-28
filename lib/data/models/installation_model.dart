@@ -43,4 +43,19 @@ class InstallationModel extends Installation {
       'status': status.index,
     };
   }
+
+  // Convertir de Firestore a un objeto InstallationModel de forma asíncrona
+  static Future<InstallationModel> fromFirestoreAsync(DocumentSnapshot doc) async {
+    var data = doc.data() as Map<String, dynamic>;
+    var orderModel = OrderModel.fromFirestore(data['order']);
+    return InstallationModel(
+      id: data['id'],
+      order: orderModel,
+      product: ProductModel.fromFirestore(data['product']),
+      scheduleDate: (data['scheduleDate'] as Timestamp?)?.toDate(),
+      completionDate: (data['completionDate'] as Timestamp?)?.toDate(),
+      notes: data['notes'],
+      status: StatusType.values[data['status']],
+    );
+  }
 }
