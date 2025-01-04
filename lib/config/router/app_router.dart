@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 import 'package:flutter_proyecto_ft/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
@@ -66,16 +65,16 @@ final appRouter = GoRouter(
       name: RegisterOrderScreen.name,
       builder: (context, state) => const RegisterOrderScreen(),
     ),
-    GoRoute(
-      path: '/register-installation',
-      name: RegisterInstallationScreen.name,
-      builder: (context, state) => const RegisterInstallationScreen(),
-    ),
-    GoRoute(
-      path: '/register-maintenance',
-      name: RegisterMaintenanceScreen.name,
-      builder: (context, state) => const RegisterMaintenanceScreen(),
-    ),
+    // GoRoute(
+    //   path: '/register-installation',
+    //   name: RegisterInstallationScreen.name,
+    //   builder: (context, state) => const RegisterInstallationScreen(),
+    // ),
+    // GoRoute(
+    //   path: '/register-maintenance',
+    //   name: RegisterMaintenanceScreen.name,
+    //   builder: (context, state) => const RegisterMaintenanceScreen(),
+    // ),
     GoRoute(
       path: '/clients-pending',
       name: ClientsPendingScreen.name,
@@ -86,18 +85,11 @@ final appRouter = GoRouter(
       name: ClientsHistoryScreen.name,
       builder: (context, state) => const ClientsHistoryScreen(),
     ),
-    GoRoute(
-      path: '/clients-detail',
-      name: ClientDetailScreen.name,
+   GoRoute(
+      path: '/clients/:id',
+      name: 'clients-detail',
       builder: (context, state) {
-        final client = state.extra as ClientModel?;
-        if (client == null) {
-          return const Scaffold(
-            body: Center(
-              child: Text('Client data is missing'),
-            ),
-          );
-        }
+        final client = state.extra as ClientModel;
         return ClientDetailScreen(client: client);
       },
     ),

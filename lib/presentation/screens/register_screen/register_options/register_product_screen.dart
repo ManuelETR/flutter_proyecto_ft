@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 
 class RegisterProductScreen extends ConsumerStatefulWidget {
-  static const String name = "register_maintenance";
+  static const String name = "register_product";
 
   const RegisterProductScreen({super.key});
 

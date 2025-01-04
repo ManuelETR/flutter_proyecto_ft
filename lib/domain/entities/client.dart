@@ -6,6 +6,7 @@ class Client {
   late String lastNames;
   String? tel;
   late Address address;
+  List<String> orderIds; // Lista de identificadores de órdenes
 
   Client({
     required this.id,
@@ -13,5 +14,8 @@ class Client {
     required this.lastNames,
     required this.address,
     this.tel,
+    this.orderIds = const [], // Inicializar con una lista vacía
   });
+
+  toClient() {}
 }

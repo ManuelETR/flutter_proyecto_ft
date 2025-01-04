@@ -96,6 +96,7 @@ class _ClientTile extends StatelessWidget {
         onTap: () {
           context.goNamed(
             'clients-detail',
+            pathParameters: {'id': client.id.toString()}, // Pasa el parámetro id
             extra: client, // Pasa el objeto client directamente
           );
         },

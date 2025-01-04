@@ -8,7 +8,8 @@ class ClientModel extends Client {
     required super.names,
     required super.lastNames,
     required AddressModel super.address,
-    super.tel, required name,
+    super.tel,
+    required super.orderIds,
   });
 
   // Convertir el modelo de datos a un mapa para Firestore
@@ -19,6 +20,7 @@ class ClientModel extends Client {
       'lastNames': lastNames,
       'tel': tel,
       'address': (address as AddressModel).toMap(),
+      'orderIds': orderIds,
     };
   }
 
@@ -31,7 +33,32 @@ class ClientModel extends Client {
       names: data['names'] ?? '',
       lastNames: data['lastNames'] ?? '',
       tel: data['tel'],
-      address: AddressModel.fromFirestore(data['address'] as Map<String, dynamic>?), name: null,
+      address: AddressModel.fromFirestore(data['address'] as Map<String, dynamic>),
+      orderIds: List<String>.from(data['orderIds'] ?? []),
+    );
+  }
+
+  // Convertir Client a ClientModel
+  factory ClientModel.fromClient(Client client) {
+    return ClientModel(
+      id: client.id,
+      names: client.names,
+      lastNames: client.lastNames,
+      tel: client.tel,
+      address: AddressModel.fromAddress(client.address),
+      orderIds: client.orderIds,
+    );
+  }
+
+  // Convertir ClientModel a Client
+  Client toClient() {
+    return Client(
+      id: id,
+      names: names,
+      lastNames: lastNames,
+      tel: tel,
+      address: address,
+      orderIds: orderIds,
     );
   }
 }

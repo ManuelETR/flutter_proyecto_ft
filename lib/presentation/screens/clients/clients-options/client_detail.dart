@@ -7,19 +7,25 @@ import 'package:flutter_proyecto_ft/presentation/widgets/forms/client_form.dart'
 import 'package:go_router/go_router.dart';
 
 class ClientDetailScreen extends StatefulWidget {
-    static const String name = "client_detail_screen";
+  static const String name = "client_detail_screen";
 
   final ClientModel client;
 
-  const ClientDetailScreen({Key? key, required this.client}) : super(key: key);
+  const ClientDetailScreen({super.key, required this.client});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ClientDetailScreenState createState() => _ClientDetailScreenState();
 }
 
 class _ClientDetailScreenState extends State<ClientDetailScreen> {
   Future<List<OrderModel>> fetchClientOrders(int clientId) async {
-    return await OrderService().getClientOrders(clientId);
+    try {
+      return await OrderService().getClientOrders(clientId);
+    } catch (e) {
+      // Manejar el error y devolver una lista vacía
+      return [];
+    }
   }
 
   Future<void> _refreshClient() async {
@@ -30,6 +36,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
         widget.client.lastNames = updatedClient.lastNames;
         widget.client.tel = updatedClient.tel;
         widget.client.address = updatedClient.address;
+        widget.client.orderIds = updatedClient.orderIds;
       });
     }
   }

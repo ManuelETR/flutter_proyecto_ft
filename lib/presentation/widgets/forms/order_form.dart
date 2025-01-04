@@ -1,146 +1,283 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_proyecto_ft/domain/entities/order.dart';
-import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_proyecto_ft/presentation/providers/client_list_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_proyecto_ft/data/models/order_model.dart';
+import 'package:flutter_proyecto_ft/data/models/client_model.dart';
+import 'package:flutter_proyecto_ft/data/models/installation_model.dart';
+import 'package:flutter_proyecto_ft/data/models/maintenance_model.dart';
+import 'package:flutter_proyecto_ft/data/models/product_model.dart';
+import 'package:flutter_proyecto_ft/domain/entities/statusType.dart';
+import 'package:flutter_proyecto_ft/presentation/providers/product_provider.dart';
 
-class OrderFormWidget extends StatefulWidget {
-  final GlobalKey<FormState> formKey;
-  final ValueChanged<OrderC> onSave;
+class OrderForm extends ConsumerStatefulWidget {
+  final void Function(OrderModel order) onSave;
 
-  const OrderFormWidget({
-    Key? key,
-    required this.formKey,
-    required this.onSave,
-  }) : super(key: key);
+  const OrderForm({super.key, required this.onSave});
 
   @override
-  _OrderFormWidgetState createState() => _OrderFormWidgetState();
+  _OrderFormState createState() => _OrderFormState();
 }
 
-class _OrderFormWidgetState extends State<OrderFormWidget> {
-  List<ClientModel> clients = [];
+class _OrderFormState extends ConsumerState<OrderForm> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _friendlyIdController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _invoiceNumberController = TextEditingController();
+  final TextEditingController _installationDescriptionController = TextEditingController();
+  final TextEditingController _maintenanceDescriptionController = TextEditingController();
+  final TextEditingController _scheduleDateController = TextEditingController();
+  final TextEditingController _completionDateController = TextEditingController();
+  bool _isInstallation = false;
+  bool _isMaintenance = false;
   ClientModel? _selectedClient;
-  DateTime? _selectedDate;
-  String? _invoiceNumber;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchClients();
-  }
-
-  Future<void> _fetchClients() async {
-    var querySnapshot = await FirebaseFirestore.instance.collection('clients').get();
-    setState(() {
-      clients = querySnapshot.docs.map((doc) {
-        return ClientModel.fromFirestore(doc);
-      }).toList();
-    });
-  }
-
-  void _saveForm() {
-    if (widget.formKey.currentState?.validate() ?? false) {
-      if (_selectedClient != null) {
-        final order = OrderC(
-          id: DateTime.now().millisecondsSinceEpoch,
-          friendlyId: 'ORD-${DateTime.now().millisecondsSinceEpoch}',
-          date: _selectedDate ?? DateTime.now(),
-          client: _selectedClient!,
-          invoiceNumber: _invoiceNumber, frendlyId: '',
-        );
-
-        widget.onSave(order);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Por favor, selecciona un cliente')),
-        );
-      }
-    }
-  }
+  ProductModel? _selectedProduct;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: widget.formKey,
+    final clients = ref.watch(clientListProvider);
+    final products = ref.watch(productListProvider);
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Dropdown para seleccionar el cliente
               DropdownButtonFormField<ClientModel>(
-                decoration: const InputDecoration(
-                  labelText: 'Cliente',
-                  border: OutlineInputBorder(),
+                decoration: const InputDecoration(labelText: 'Cliente'),
+                items: clients.when(
+                  data: (clients) => clients.map((client) {
+                    return DropdownMenuItem<ClientModel>(
+                      value: client,
+                      child: Text('${client.names} ${client.lastNames}'),
+                    );
+                  }).toList(),
+                  loading: () => [],
+                  error: (err, stack) => [],
                 ),
-                items: clients.map((client) {
-                  return DropdownMenuItem(
-                    value: client,
-                    child: Text(client.names),
-                  );
-                }).toList(),
-                onChanged: (client) {
+                onChanged: (ClientModel? value) {
                   setState(() {
-                    _selectedClient = client;
+                    _selectedClient = value;
                   });
                 },
+                validator: (value) {
+                  if (value == null) {
+                    return 'Este campo es obligatorio';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(height: 16),
-
-              // Selector de fecha
-              GestureDetector(
+              TextFormField(
+                controller: _friendlyIdController,
+                decoration: const InputDecoration(labelText: 'Friendly ID'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Este campo es obligatorio';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _dateController,
+                decoration: const InputDecoration(labelText: 'Fecha'),
+                readOnly: true,
                 onTap: () async {
-                  final selectedDate = await showDatePicker(
+                  DateTime? pickedDate = await showDatePicker(
                     context: context,
                     initialDate: DateTime.now(),
-                    firstDate: DateTime.now().subtract(const Duration(days: 365)),
-                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
                   );
+                  if (pickedDate != null) {
+                    setState(() {
+                      _dateController.text = pickedDate.toIso8601String();
+                    });
+                  }
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Este campo es obligatorio';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _invoiceNumberController,
+                decoration: const InputDecoration(labelText: 'Número de Factura (opcional)'),
+              ),
+              CheckboxListTile(
+                title: const Text('Instalación'),
+                value: _isInstallation,
+                onChanged: (bool? value) {
                   setState(() {
-                    _selectedDate = selectedDate;
+                    _isInstallation = value ?? false;
+                    if (_isInstallation) _isMaintenance = false;
                   });
                 },
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Fecha',
-                    border: OutlineInputBorder(),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        _selectedDate != null
-                            ? _selectedDate!.toLocal().toString().split(' ')[0]
-                            : 'Seleccionar fecha',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const Icon(Icons.calendar_today),
-                    ],
-                  ),
-                ),
               ),
-              const SizedBox(height: 16),
-
-              // Campo de número de factura
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Número de Factura',
-                  border: OutlineInputBorder(),
+              if (_isInstallation) ...[
+                DropdownButtonFormField<ProductModel>(
+                  decoration: const InputDecoration(labelText: 'Producto'),
+                  items: products.when(
+                    data: (products) => products.map((product) {
+                      return DropdownMenuItem<ProductModel>(
+                        value: product,
+                        child: Text(product.name),
+                      );
+                    }).toList(),
+                    loading: () => [],
+                    error: (err, stack) => [],
+                  ),
+                  onChanged: (ProductModel? value) {
+                    setState(() {
+                      _selectedProduct = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Este campo es obligatorio';
+                    }
+                    return null;
+                  },
                 ),
-                onChanged: (value) {
-                  _invoiceNumber = value;
+                TextFormField(
+                  controller: _installationDescriptionController,
+                  decoration: const InputDecoration(labelText: 'Descripción de la Instalación'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Este campo es obligatorio';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _scheduleDateController,
+                  decoration: const InputDecoration(labelText: 'Fecha Programada'),
+                  readOnly: true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2101),
+                    );
+                    if (pickedDate != null) {
+                      setState(() {
+                        _scheduleDateController.text = pickedDate.toIso8601String();
+                      });
+                    }
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Este campo es obligatorio';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _completionDateController,
+                  decoration: const InputDecoration(labelText: 'Fecha de Finalización (opcional)'),
+                  readOnly: true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2101),
+                    );
+                    if (pickedDate != null) {
+                      setState(() {
+                        _completionDateController.text = pickedDate.toIso8601String();
+                      });
+                    }
+                  },
+                ),
+              ],
+              CheckboxListTile(
+                title: const Text('Mantenimiento'),
+                value: _isMaintenance,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _isMaintenance = value ?? false;
+                    if (_isMaintenance) _isInstallation = false;
+                  });
                 },
               ),
-              const SizedBox(height: 16),
-
-              // Botón de guardar
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _saveForm,
-                  child: const Text('Guardar Orden'),
+              if (_isMaintenance)
+                TextFormField(
+                  controller: _maintenanceDescriptionController,
+                  decoration: const InputDecoration(labelText: 'Descripción del Mantenimiento'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Este campo es obligatorio';
+                    }
+                    return null;
+                  },
                 ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate() && _selectedClient != null) {
+                    final installation = _isInstallation
+                        ? InstallationModel(
+                            id: DateTime.now().millisecondsSinceEpoch,
+                            order: OrderModel(
+                              id: DateTime.now().millisecondsSinceEpoch,
+                              client: _selectedClient!,
+                              friendlyId: _friendlyIdController.text,
+                              date: DateTime.parse(_dateController.text),
+                              type: 'installation',
+                            ),
+                            product: _selectedProduct!,
+                            scheduleDate: DateTime.parse(_scheduleDateController.text),
+                            completionDate: _completionDateController.text.isNotEmpty ? DateTime.parse(_completionDateController.text) : null,
+                            notes: _installationDescriptionController.text,
+                            status: StatusType.pending,
+                          )
+                        : null;
+
+                    final maintenance = _isMaintenance
+                        ? MaintenanceModel(
+                            id: DateTime.now().millisecondsSinceEpoch,
+                            order: OrderModel(
+                              id: DateTime.now().millisecondsSinceEpoch,
+                              client: _selectedClient!,
+                              friendlyId: _friendlyIdController.text,
+                              date: DateTime.parse(_dateController.text),
+                              type: 'maintenance',
+                            ),
+                            scheduleDate: DateTime.now().add(const Duration(days: 365)),
+                            notes: _maintenanceDescriptionController.text,
+                          )
+                        : null;
+
+                    final newOrder = OrderModel(
+                      id: DateTime.now().millisecondsSinceEpoch,
+                      client: _selectedClient!,
+                      friendlyId: _friendlyIdController.text,
+                      date: DateTime.parse(_dateController.text),
+                      invoiceNumber: _invoiceNumberController.text.isEmpty ? null : _invoiceNumberController.text,
+                      installationRef: installation != null ? FirebaseFirestore.instance.collection('installations').doc(installation.id.toString()) : null,
+                      maintenanceRef: maintenance != null ? FirebaseFirestore.instance.collection('maintenances').doc(maintenance.id.toString()) : null,
+                      type: _isInstallation ? 'installation' : 'maintenance',
+                    );
+
+                    widget.onSave(newOrder);
+
+                    if (installation != null) {
+                      await FirebaseFirestore.instance.collection('installations').doc(installation.id.toString()).set(installation.toMap());
+                    }
+
+                    if (maintenance != null) {
+                      await FirebaseFirestore.instance.collection('maintenances').doc(maintenance.id.toString()).set(maintenance.toMap());
+                    }
+
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: const Text('Guardar Orden'),
               ),
             ],
           ),

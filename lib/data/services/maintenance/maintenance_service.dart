@@ -1,47 +1,29 @@
-import 'package:flutter_proyecto_ft/data/models/maintenance_model.dart';
-import 'package:flutter_proyecto_ft/data/models/order_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_proyecto_ft/data/repositories/maintenance_repository.dart';
+import 'package:flutter_proyecto_ft/data/models/maintenance_model.dart';
 
-class FirestoreMaintenanceService implements MaintenanceRepository {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+class MaintenanceService {
+  final CollectionReference _maintenancesCollection = FirebaseFirestore.instance.collection('maintenances');
 
-  @override
-  Future<void> createMaintenance(MaintenanceModel maintenance) async {
-    // Crear una nueva orden
-    var orderRef = firestore.collection('orders').doc();
-    var order = OrderModel.fromOrderC(maintenance.order);
-    await orderRef.set(order.toMap());
-
-    // Crear un nuevo mantenimiento
-    var maintenanceRef = firestore.collection('maintenances').doc();
-    var maintenanceModel = MaintenanceModel(
-      id: maintenanceRef.id.hashCode, // Usar hashCode para generar un ID único
-      order: order,
-      scheduleDate: maintenance.scheduleDate,
-      completionDate: maintenance.completionDate,
-      notes: maintenance.notes,
-    );
-    await maintenanceRef.set(maintenanceModel.toMap());
+  Future<void> addMaintenance(MaintenanceModel maintenance) async {
+    await _maintenancesCollection.add(maintenance.toMap());
   }
 
-  @override
-  Future<List<MaintenanceModel>> getMaintenances() async {
-    var querySnapshot = await firestore.collection('maintenances').get();
-    return querySnapshot.docs
-        .map((doc) => MaintenanceModel.fromFirestore(doc))
-        .toList();
+  Future<void> updateMaintenance(String id, MaintenanceModel maintenance) async {
+    await _maintenancesCollection.doc(id).update(maintenance.toMap());
   }
 
-  @override
-  Future<void> updateMaintenance(MaintenanceModel maintenance) async {
-    var maintenanceRef = firestore.collection('maintenances').doc(maintenance.id.toString());
-    await maintenanceRef.update(maintenance.toMap());
+  Future<void> deleteMaintenance(String id) async {
+    await _maintenancesCollection.doc(id).delete();
   }
 
-  @override
-  Future<void> deleteMaintenance(int id) async {
-    var maintenanceRef = firestore.collection('maintenances').doc(id.toString());
-    await maintenanceRef.delete();
+  Future<MaintenanceModel> getMaintenance(String id) async {
+    DocumentSnapshot doc = await _maintenancesCollection.doc(id).get();
+    return MaintenanceModel.fromFirestore(doc);
+  }
+
+  Stream<List<MaintenanceModel>> getMaintenances() {
+    return _maintenancesCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => MaintenanceModel.fromFirestore(doc)).toList();
+    });
   }
 }

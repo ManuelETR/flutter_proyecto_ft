@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_proyecto_ft/domain/entities/order.dart';
 import 'package:flutter_proyecto_ft/domain/entities/product.dart';
 import 'package:flutter_proyecto_ft/domain/entities/statusType.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
@@ -23,6 +22,7 @@ class InstallationFormWidget extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _InstallationFormWidgetState createState() => _InstallationFormWidgetState();
 }
 
@@ -73,7 +73,7 @@ class _InstallationFormWidgetState extends State<InstallationFormWidget> {
               items: orders.map((order) {
                 return DropdownMenuItem(
                   value: order,
-                  child: Text(order.friendlyId ?? ''),
+                  child: Text(order.friendlyId),
                 );
               }).toList(),
               onChanged: (order) {

@@ -1,17 +1,25 @@
 import 'package:flutter_proyecto_ft/domain/entities/client.dart';
+import 'package:flutter_proyecto_ft/domain/entities/installation.dart';
+import 'package:flutter_proyecto_ft/domain/entities/maintenance.dart';
 
 class OrderC {
   final int id;
   final Client client;
-  String? friendlyId;
+  final String friendlyId;
   final DateTime date;
-  String? invoiceNumber;
+  final String? invoiceNumber;
+  final Installation? installation;
+  final Maintenance? maintenance;
+  final String type; // "installation" o "maintenance"
 
   OrderC({
     required this.id,
+    required this.client,
     required this.friendlyId,
     required this.date,
-    required this.client,
-    this.invoiceNumber, required String frendlyId,
+    this.invoiceNumber,
+    this.installation,
+    this.maintenance,
+    required this.type,
   });
 }

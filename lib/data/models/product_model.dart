@@ -1,4 +1,3 @@
-// data/models/product_model.dart
 import 'package:flutter_proyecto_ft/domain/entities/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -29,14 +28,36 @@ class ProductModel extends Product {
     var data = doc.data() as Map<String, dynamic>;
 
     return ProductModel(
-      id: data['id'] ?? 0,
-      name: data['name'] ?? '',
+      id: data['id'],
+      name: data['name'],
       description: data['description'],
       brand: data['brand'],
-      details: data['details'] != null
-          ? Map<String, String>.from(data['details'])
-          : null,
+      details: data['details'] != null ? Map<String, String>.from(data['details']) : null,
       photo: data['photo'],
+    );
+  }
+
+  // Convertir Product a ProductModel
+  factory ProductModel.fromProduct(Product product) {
+    return ProductModel(
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      brand: product.brand,
+      details: product.details,
+      photo: product.photo,
+    );
+  }
+
+  // Convertir ProductModel a Product
+  Product toProduct() {
+    return Product(
+      id: id,
+      name: name,
+      description: description,
+      brand: brand,
+      details: details,
+      photo: photo,
     );
   }
 }

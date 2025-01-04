@@ -5,7 +5,7 @@ import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 import 'package:flutter_proyecto_ft/presentation/providers/client_list_provider.dart';
 
 class RegisterClientScreen extends ConsumerStatefulWidget {
-    static const String name = "register_client_screen";
+  static const String name = "register_client_screen";
   const RegisterClientScreen({super.key});
 
   @override

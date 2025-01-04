@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MaintenanceModel extends Maintenance {
   MaintenanceModel({
     required super.id,
-    required OrderModel order,  // Aquí usas 'OrderModel' porque estás trabajando con el modelo
-    super.scheduleDate,
+    required OrderModel order,
+    required super.scheduleDate,
     super.completionDate,
     super.notes,
   }) : super(
@@ -18,9 +18,9 @@ class MaintenanceModel extends Maintenance {
     var data = doc.data() as Map<String, dynamic>;
     return MaintenanceModel(
       id: data['id'],
-      order: OrderModel.fromFirestore(data['order']),  // Convierte 'order' correctamente
+      order: OrderModel.fromFirestore(data['order']),
       scheduleDate: (data['scheduleDate'] as Timestamp).toDate(),
-      completionDate: (data['completionDate'] as Timestamp).toDate(),
+      completionDate: (data['completionDate'] as Timestamp?)?.toDate(),
       notes: data['notes'],
     );
   }
@@ -29,10 +29,32 @@ class MaintenanceModel extends Maintenance {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'order': (order as OrderModel).toMap(),  // Convierte 'order' correctamente
-      'scheduleDate': scheduleDate,
-      'completionDate': completionDate,
+      'order': (order as OrderModel).toMap(),
+      'scheduleDate': scheduleDate.toIso8601String(),
+      'completionDate': completionDate?.toIso8601String(),
       'notes': notes,
     };
+  }
+
+  // Convertir Maintenance a MaintenanceModel
+  factory MaintenanceModel.fromMaintenance(Maintenance maintenance) {
+    return MaintenanceModel(
+      id: maintenance.id,
+      order: OrderModel.fromOrderC(maintenance.order),
+      scheduleDate: maintenance.scheduleDate,
+      completionDate: maintenance.completionDate,
+      notes: maintenance.notes,
+    );
+  }
+
+  // Convertir MaintenanceModel a Maintenance
+  Maintenance toMaintenance() {
+    return Maintenance(
+      id: id,
+      order: order,
+      scheduleDate: scheduleDate,
+      completionDate: completionDate,
+      notes: notes,
+    );
   }
 }

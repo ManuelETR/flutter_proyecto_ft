@@ -7,12 +7,11 @@ class Product {
   String? photo;
 
   Product({
-    required this.id, 
-    required this.name, 
-    this.description, 
+    required this.id,
+    required this.name,
+    this.description,
     this.brand,
     this.details,
-    this.photo
-    });
+    this.photo,
+  });
 }
-

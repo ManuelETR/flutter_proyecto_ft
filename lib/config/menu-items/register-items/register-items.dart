@@ -36,16 +36,16 @@ const registerMenuItems = <RegisterMenuItem>[
     link: '/register-product',
     icon: Icons.all_inbox_rounded,
   ),
-  RegisterMenuItem(
-    title: 'Registro de Instalación',
-    subTitle: 'Registrar una nueva instalación de aire acondicionado.',
-    link: '/register-installation',
-    icon: Icons.settings_input_antenna_sharp,
-  ),
-  RegisterMenuItem(
-    title: 'Registro de Mantenimiento',
-    subTitle: 'Registrar un mantenimiento técnico.',
-    link: '/register-maintenance',
-    icon: Icons.build_circle_sharp,
-  ),
+  // RegisterMenuItem(
+  //   title: 'Registro de Instalación',
+  //   subTitle: 'Registrar una nueva instalación de aire acondicionado.',
+  //   link: '/register-installation',
+  //   icon: Icons.settings_input_antenna_sharp,
+  // ),
+  // RegisterMenuItem(
+  //   title: 'Registro de Mantenimiento',
+  //   subTitle: 'Registrar un mantenimiento técnico.',
+  //   link: '/register-maintenance',
+  //   icon: Icons.build_circle_sharp,
+  // ),
 ];

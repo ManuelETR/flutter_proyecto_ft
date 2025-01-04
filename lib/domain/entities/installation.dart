@@ -6,16 +6,16 @@ class Installation {
   final int id;
   final OrderC order;
   final Product product;
-  final StatusType status;
-  DateTime? scheduleDate;
+  final DateTime scheduleDate;
   DateTime? completionDate;
   String? notes;
+  final StatusType status;
 
   Installation({
     required this.id,
     required this.order,
     required this.product,
-    this.scheduleDate,
+    required this.scheduleDate,
     this.completionDate,
     this.notes,
     this.status = StatusType.pending,

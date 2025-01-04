@@ -4,15 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AlertModel extends Alert {
   AlertModel({
-    required int id,
+    required super.id,
     required OrderModel order,
-    bool isIgnored = false,
-    DateTime? snoozeDate,
+    super.isIgnored,
+    super.snoozeDate,
   }) : super(
-          id: id,
           order: order.toOrderC(),
-          isIgnored: isIgnored,
-          snoozeDate: snoozeDate,
         );
 
   // Convertir de Firestore a un objeto AlertModel

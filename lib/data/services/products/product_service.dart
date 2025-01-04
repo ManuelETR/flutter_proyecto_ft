@@ -20,6 +20,13 @@ class FirestoreProductService implements ProductRepository {
   }
 
   @override
+  Stream<List<ProductModel>> getProductsStream() {
+    return firestore.collection('products').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => ProductModel.fromFirestore(doc)).toList();
+    });
+  }
+
+  @override
   Future<void> updateProduct(ProductModel product) async {
     var productRef = firestore.collection('products').doc(product.id.toString());
     await productRef.update(product.toMap());

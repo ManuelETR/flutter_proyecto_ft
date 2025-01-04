@@ -1,52 +1,72 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_proyecto_ft/domain/entities/order.dart';
-import 'package:flutter_proyecto_ft/domain/entities/client.dart';
-import 'package:flutter_proyecto_ft/domain/entities/address.dart';
+import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 
-class OrderModel {
-  final int id;
-  final int clientId;
-  final String friendlyId;
-  final DateTime date;
-  final String? invoiceNumber;
+class OrderModel extends OrderC {
+  final DocumentReference? installationRef;
+  final DocumentReference? maintenanceRef;
 
   OrderModel({
-    required this.id,
-    required this.clientId,
-    required this.friendlyId,
-    required this.date,
-    this.invoiceNumber,
-  });
+    required int id,
+    required ClientModel client,
+    required String friendlyId,
+    required DateTime date,
+    String? invoiceNumber,
+    this.installationRef,
+    this.maintenanceRef,
+    required String type,
+  }) : super(
+          id: id,
+          client: client,
+          friendlyId: friendlyId,
+          date: date,
+          invoiceNumber: invoiceNumber,
+          installation: null,
+          maintenance: null,
+          type: type,
+        );
 
-  factory OrderModel.fromFirestore(DocumentSnapshot doc) {
-    var data = doc.data() as Map<String, dynamic>;
-    return OrderModel(
-      id: data['id'],
-      clientId: data['clientId'],
-      friendlyId: data['friendlyId'],
-      date: (data['date'] as Timestamp).toDate(),
-      invoiceNumber: data['invoiceNumber'],
-    );
-  }
-
+  // Convertir el modelo de datos a un mapa para Firestore
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'clientId': clientId,
+      'clientId': client.id,
       'friendlyId': friendlyId,
-      'date': date,
+      'date': date.toIso8601String(),
       'invoiceNumber': invoiceNumber,
+      'installationRef': installationRef,
+      'maintenanceRef': maintenanceRef,
+      'type': type,
     };
+  }
+
+  // Convertir de un documento de Firestore a OrderModel
+  factory OrderModel.fromFirestore(DocumentSnapshot doc) {
+    var data = doc.data() as Map<String, dynamic>;
+
+    return OrderModel(
+      id: int.parse(doc.id),
+      client: ClientModel.fromFirestore(data['clientId']),
+      friendlyId: data['friendlyId'],
+      date: DateTime.parse(data['date']),
+      invoiceNumber: data['invoiceNumber'],
+      installationRef: data['installationRef'],
+      maintenanceRef: data['maintenanceRef'],
+      type: data['type'],
+    );
   }
 
   // Convertir OrderC a OrderModel
   factory OrderModel.fromOrderC(OrderC order) {
     return OrderModel(
       id: order.id,
-      clientId: order.client.id,
-      friendlyId: order.friendlyId ?? '',
+      client: ClientModel.fromClient(order.client),
+      friendlyId: order.friendlyId,
       date: order.date,
       invoiceNumber: order.invoiceNumber,
+      installationRef: null,
+      maintenanceRef: null,
+      type: order.type,
     );
   }
 
@@ -54,19 +74,13 @@ class OrderModel {
   OrderC toOrderC() {
     return OrderC(
       id: id,
-      client: Client(
-        id: clientId,
-        names: '', // Aquí debes obtener el nombre del cliente
-        lastNames: '', // Aquí debes obtener el apellido del cliente
-        address: Address(
-          street: '', // Aquí debes obtener la dirección del cliente
-          number: '', // Aquí debes obtener el número de la dirección del cliente
-          neighborhood: '', // Aquí debes obtener el vecindario del cliente
-        ),
-      ),
-      frendlyId: friendlyId,
+      client: client.toClient(),
+      friendlyId: friendlyId,
       date: date,
-      invoiceNumber: invoiceNumber, friendlyId: '',
+      invoiceNumber: invoiceNumber,
+      installation: null,
+      maintenance: null,
+      type: type,
     );
   }
 }

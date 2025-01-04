@@ -1,24 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_proyecto_ft/data/models/installation_model.dart';
-import 'package:flutter_proyecto_ft/domain/entities/installation.dart';
+import 'package:flutter_proyecto_ft/data/services/installation/installation_service.dart';
 
-class InstalacionRepository {
-  final CollectionReference _collection =
-      FirebaseFirestore.instance.collection('instalaciones');
+class InstallationRepository {
+  final InstallationService _installationService = InstallationService();
 
-  // Método para agregar una instalación
-  Future<void> addInstalacion(Installation instalacion) async {
-    // Convertir la entidad a su modelo para Firestore (usamos InstallationModel)
-    final installationModel = instalacion as InstallationModel;  // Asegúrate de usar el tipo adecuado
-    await _collection.add(installationModel.toMap());
+  Future<void> addInstallation(InstallationModel installation) async {
+    await _installationService.addInstallation(installation);
   }
 
-  // Método para obtener todas las instalaciones
-  Future<List<Installation>> fetchInstalaciones() async {
-    final snapshot = await _collection.get();
-    // Convertir cada documento a un modelo de instalación
-    return snapshot.docs
-        .map((doc) => InstallationModel.fromFirestore(doc))
-        .toList();
+  Future<void> updateInstallation(String id, InstallationModel installation) async {
+    await _installationService.updateInstallation(id, installation);
+  }
+
+  Future<void> deleteInstallation(String id) async {
+    await _installationService.deleteInstallation(id);
+  }
+
+  Future<InstallationModel> getInstallation(String id) async {
+    return await _installationService.getInstallation(id);
+  }
+
+  Stream<List<InstallationModel>> getInstallations() {
+    return _installationService.getInstallations();
   }
 }

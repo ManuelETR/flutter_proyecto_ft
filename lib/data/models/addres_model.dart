@@ -1,4 +1,3 @@
-// data/models/address_model.dart
 import 'package:flutter_proyecto_ft/domain/entities/address.dart';
 
 class AddressModel extends Address {
@@ -6,7 +5,7 @@ class AddressModel extends Address {
     required super.street,
     required super.number,
     required super.neighborhood,
-    super.postalCode,
+    required super.postalCode,
   });
 
   // Convertir el modelo de datos a un mapa para Firestore
@@ -19,16 +18,33 @@ class AddressModel extends Address {
     };
   }
 
-  // Convertir de un documento de Firestore a AddressModel
-  factory AddressModel.fromFirestore(Map<String, dynamic>? data) {
-    if (data == null) {
-      throw Exception("Address data is null");
-    }
+  // Convertir de un mapa de Firestore a AddressModel
+  factory AddressModel.fromFirestore(Map<String, dynamic> data) {
     return AddressModel(
       street: data['street'] ?? '',
       number: data['number'] ?? '',
       neighborhood: data['neighborhood'] ?? '',
-      postalCode: data['postalCode'],
+      postalCode: data['postalCode'] ?? '',
+    );
+  }
+
+  // Convertir Address a AddressModel
+  factory AddressModel.fromAddress(Address address) {
+    return AddressModel(
+      street: address.street,
+      number: address.number,
+      neighborhood: address.neighborhood,
+      postalCode: address.postalCode,
+    );
+  }
+
+  // Convertir AddressModel a Address
+  Address toAddress() {
+    return Address(
+      street: street,
+      number: number,
+      neighborhood: neighborhood,
+      postalCode: postalCode,
     );
   }
 }

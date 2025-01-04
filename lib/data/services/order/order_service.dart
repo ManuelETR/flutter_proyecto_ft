@@ -1,55 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
-import 'package:flutter_proyecto_ft/domain/entities/order.dart';
 
 class OrderService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final CollectionReference _ordersCollection = FirebaseFirestore.instance.collection('orders');
 
-  // Crear una nueva orden
-  Future<void> addOrder(OrderC order) async {
-    try {
-      await _db.collection('orders').doc(order.id.toString()).set({
-        'id': order.id,
-        'clientId': order.client.id,
-        'friendlyId': order.friendlyId,
-        'date': order.date,
-        'invoiceNumber': order.invoiceNumber,
-      });
-    } catch (e) {
-      print("Error adding order: $e");
-    }
+  Future<void> addOrder(OrderModel order) async {
+    await _ordersCollection.add(order.toMap());
   }
 
-  // Obtener todas las órdenes
-  Future<List<OrderModel>> getOrders() async {
-    var querySnapshot = await _db.collection('orders').get();
-    return querySnapshot.docs
-        .map((doc) => OrderModel.fromFirestore(doc))
-        .toList();
+  Future<void> updateOrder(String id, OrderModel order) async {
+    await _ordersCollection.doc(id).update(order.toMap());
   }
 
-  // Actualizar una orden
-  Future<void> updateOrder(OrderC order) async {
-    try {
-      await _db.collection('orders').doc(order.id.toString()).update({
-        'clientId': order.client.id,
-        'friendlyId': order.friendlyId,
-        'date': order.date,
-        'invoiceNumber': order.invoiceNumber,
-      });
-    } catch (e) {
-      print("Error updating order: $e");
-    }
+  Future<void> deleteOrder(String id) async {
+    await _ordersCollection.doc(id).delete();
   }
 
-  // Eliminar una orden
-  Future<void> deleteOrder(int id) async {
-    try {
-      await _db.collection('orders').doc(id.toString()).delete();
-    } catch (e) {
-      print("Error deleting order: $e");
-    }
+  Future<OrderModel> getOrder(String id) async {
+    DocumentSnapshot doc = await _ordersCollection.doc(id).get();
+    return OrderModel.fromFirestore(doc);
   }
 
-  getClientOrders(int clientId) {}
+  Stream<List<OrderModel>> getOrders() {
+    return _ordersCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => OrderModel.fromFirestore(doc)).toList();
+    });
+  }
+
+  Future<List<OrderModel>> getClientOrders(int clientId) async {
+    QuerySnapshot querySnapshot = await _ordersCollection.where('clientId', isEqualTo: clientId).get();
+    return querySnapshot.docs.map((doc) => OrderModel.fromFirestore(doc)).toList();
+  }
 }

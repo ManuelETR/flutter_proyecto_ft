@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/data/models/addres_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 import 'package:flutter_proyecto_ft/domain/entities/client.dart';
-import 'package:flutter_proyecto_ft/data/models/client_model.dart';// Importa AddressModel
 
 class ClientForm extends ConsumerStatefulWidget {
   final Client? existingClient;
@@ -136,7 +136,8 @@ class _ClientFormState extends ConsumerState<ClientForm> {
                       names: _nameController.text,
                       lastNames: _lastNameController.text,
                       tel: _telController.text.isEmpty ? null : _telController.text,
-                      address: address, name: null,
+                      address: address,
+                      orderIds: widget.existingClient?.orderIds ?? [],
                     );
 
                     widget.onSave(newClient);  // Llamamos a la función onSave
