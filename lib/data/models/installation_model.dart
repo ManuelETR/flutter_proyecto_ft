@@ -58,6 +58,8 @@ class InstallationModel extends Installation {
     );
   }
 
+  get friendlyId => null;
+
   // Convertir InstallationModel a Installation
   Installation toInstallation() {
     return Installation(

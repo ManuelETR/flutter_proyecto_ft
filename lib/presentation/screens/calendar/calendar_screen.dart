@@ -22,7 +22,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final orders = ref.watch(orderListProvider);
 
     return Scaffold(
-            appBar: AppBar(
+      appBar: AppBar(
         title: const Text(
           'Calendario',
           style: TextStyle(
@@ -35,52 +35,52 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         children: [
           Expanded(
             flex: 2,
-            child: TableCalendar(
-              locale: 'es_ES', // Configurar el calendario en español
-              firstDay: DateTime.utc(2000, 1, 1),
-              lastDay: DateTime.utc(2100, 12, 31),
-              focusedDay: _focusedDay,
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
-              },
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                });
-              },
-              calendarStyle: const CalendarStyle(
-                todayDecoration: BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-                selectedDecoration: BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-                markersMaxCount: 1,
-                markerDecoration: BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-                outsideDaysVisible: false,
-                defaultTextStyle: TextStyle(color: Colors.black),
-                weekendTextStyle: TextStyle(color: Colors.black),
-                todayTextStyle: TextStyle(color: Colors.white),
-                selectedTextStyle: TextStyle(color: Colors.white),
-              ),
-              daysOfWeekStyle: const DaysOfWeekStyle(
-                weekendStyle: TextStyle(color: Colors.red),
-                weekdayStyle: TextStyle(color: Colors.black),
-              ),
-              headerStyle: const HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true,
-              ),
-              calendarBuilders: CalendarBuilders(
-                markerBuilder: (context, date, events) {
-                  return orders.when(
-                    data: (orders) {
+            child: orders.when(
+              data: (orders) {
+                return TableCalendar(
+                  locale: 'es_ES', // Configurar el calendario en español
+                  firstDay: DateTime.utc(2000, 1, 1),
+                  lastDay: DateTime.utc(2100, 12, 31),
+                  focusedDay: _focusedDay,
+                  selectedDayPredicate: (day) {
+                    return isSameDay(_selectedDay, day);
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                  },
+                  calendarStyle: const CalendarStyle(
+                    todayDecoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                    ),
+                    selectedDecoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    markersMaxCount: 1,
+                    markerDecoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    outsideDaysVisible: false,
+                    defaultTextStyle: TextStyle(color: Colors.black),
+                    weekendTextStyle: TextStyle(color: Colors.black),
+                    todayTextStyle: TextStyle(color: Colors.white),
+                    selectedTextStyle: TextStyle(color: Colors.white),
+                  ),
+                  daysOfWeekStyle: const DaysOfWeekStyle(
+                    weekendStyle: TextStyle(color: Colors.red),
+                    weekdayStyle: TextStyle(color: Colors.black),
+                  ),
+                  headerStyle: const HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                  ),
+                  calendarBuilders: CalendarBuilders(
+                    markerBuilder: (context, date, events) {
                       final dayOrders = orders.where((order) => isSameDay(order.date, date)).toList();
                       if (dayOrders.isNotEmpty) {
                         return Positioned(
@@ -97,11 +97,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       }
                       return null;
                     },
-                    loading: () => const CircularProgressIndicator(),
-                    error: (err, stack) => const Icon(Icons.error),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) {
+                print('Error al cargar las órdenes: $err');
+                return const Center(child: Text('Error al cargar las órdenes'));
+              },
             ),
           ),
           const SizedBox(height: 8.0),
@@ -127,8 +130,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   },
                 );
               },
-              loading: () => const CircularProgressIndicator(),
-              error: (err, stack) => const Icon(Icons.error),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) {
+                print('Error al cargar las órdenes: $err');
+                return const Center(child: Text('Error al cargar las órdenes'));
+              },
             ),
           ),
         ],
