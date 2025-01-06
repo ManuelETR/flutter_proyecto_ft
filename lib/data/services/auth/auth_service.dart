@@ -1,10 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_proyecto_ft/presentation/widgets/login/toast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis/calendar/v3.dart' as calendar;
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:http/http.dart' as http;
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [calendar.CalendarApi.calendarScope],
+  );
 
   /// Registrar usuario con correo y contraseña
   Future<User?> signUpWithEmailAndPassword(String email, String password) async {
@@ -67,6 +72,27 @@ class AuthService {
       showToast(message: 'Error inesperado: $e');
     }
     return null;
+  }
+
+  /// Obtener cliente autenticado para Google Calendar API
+  Future<AuthClient> getCalendarClient() async {
+    final GoogleSignInAccount? googleUser = _googleSignIn.currentUser ?? await _googleSignIn.signInSilently();
+    if (googleUser == null) {
+      throw Exception('Usuario no autenticado');
+    }
+
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final client = authenticatedClient(http.Client(), AccessCredentials(
+      AccessToken(
+        'Bearer',
+        googleAuth.accessToken!,
+        DateTime.now().add(const Duration(hours: 1)), // Duración de 1 hora
+      ),
+      googleAuth.idToken!,
+      [calendar.CalendarApi.calendarScope],
+    ));
+    return client;
   }
 
   /// Cerrar sesión

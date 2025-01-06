@@ -15,11 +15,11 @@ Future<void> main() async {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  // Inicializa Firebase
     await initializeDateFormatting('es_ES', null); // Inicializar la configuración regional para español
     if (kDebugMode) {
-      print("Firebase inicializado correctamente");
+      debugPrint("Firebase inicializado correctamente");
     }  // Mensaje de confirmación
   } catch (e) {
     if (kDebugMode) {
-      print("Error al inicializar Firebase: $e");
+      debugPrint("Error al inicializar Firebase: $e");
     }
   }
 
