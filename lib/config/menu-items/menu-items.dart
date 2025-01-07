@@ -27,8 +27,14 @@ const appMenuItemsMain = <MenuItem>[
     icon: Icons.app_registration_sharp,
   ),
   MenuItem(
-    title: 'Clientes y Trabajos',
+    title: 'Trabajos',
     subTitle: 'Trabajos Pendientes e Historial',
+    link: '/orders',
+    icon: Icons.list_alt_sharp,
+  ),
+  MenuItem(
+    title: 'Clientes',
+    subTitle: 'Listado de clientes',
     link: '/clients',
     icon: Icons.assignment_ind_sharp,
   ),

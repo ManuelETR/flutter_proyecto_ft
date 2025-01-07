@@ -29,8 +29,4 @@ class FirestoreOrderRepository implements OrderRepository {
   Stream<List<OrderModel>> getOrders() {
     return _orderService.getOrders();
   }
-
-  Future<List<OrderModel>> getClientOrders(int clientId) async {
-    return await _orderService.getClientOrders(clientId);
-  }
 }

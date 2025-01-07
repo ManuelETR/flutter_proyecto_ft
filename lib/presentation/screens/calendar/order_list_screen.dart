@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_proyecto_ft/presentation/providers/installation_provider.dart';
@@ -47,7 +48,9 @@ class OrderListScreen extends ConsumerWidget {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) {
-          print('Error al cargar las instalaciones: $err');
+          if (kDebugMode) {
+            print('Error al cargar las instalaciones: $err');
+          }
           return const Center(child: Text('Error al cargar las instalaciones'));
         },
       ),

@@ -7,23 +7,17 @@ class OrderModel extends OrderC {
   final DocumentReference? maintenanceRef;
 
   OrderModel({
-    required int id,
-    required ClientModel client,
-    required String friendlyId,
-    required DateTime date,
-    String? invoiceNumber,
+    required super.id,
+    required ClientModel super.client,
+    required super.friendlyId,
+    required super.date,
+    super.invoiceNumber,
     this.installationRef,
     this.maintenanceRef,
-    required String type,
+    required super.type,
   }) : super(
-          id: id,
-          client: client,
-          friendlyId: friendlyId,
-          date: date,
-          invoiceNumber: invoiceNumber,
           installation: null,
           maintenance: null,
-          type: type,
         );
 
   // Convertir el modelo de datos a un mapa para Firestore
@@ -69,6 +63,10 @@ class OrderModel extends OrderC {
       type: order.type,
     );
   }
+
+  bool get isEmpty => id == 0;
+
+  get length => null;
 
   // Convertir OrderModel a OrderC
   OrderC toOrderC() {

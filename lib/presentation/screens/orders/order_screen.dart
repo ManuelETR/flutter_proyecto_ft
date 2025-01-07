@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_proyecto_ft/data/models/client_model.dart';
-import 'package:flutter_proyecto_ft/presentation/providers/client_list_provider.dart';
+import 'package:flutter_proyecto_ft/data/models/order_model.dart';
+import 'package:flutter_proyecto_ft/presentation/providers/order_provider.dart';
 
-class ClientScreen extends ConsumerWidget {
-  static const String name = "client_screen";
+class OrderScreen extends ConsumerWidget {
+  static const String name = "order_screen";
 
-  const ClientScreen({super.key});
+  const OrderScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final clientListAsync = ref.watch(clientListProvider);
+    final orderListAsync = ref.watch(orderListProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -20,17 +20,17 @@ class ClientScreen extends ConsumerWidget {
           onPressed: () => context.go('/home'), // Navega explícitamente a la ruta de Home
         ),
         title: const Text(
-          'Clientes y Trabajos',
+          'Lista de Órdenes',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color.fromARGB(255, 222, 220, 219),
       ),
-      body: clientListAsync.when(
-        data: (clients) {
-          if (clients.isEmpty) {
-            return const Center(child: Text('No hay clientes disponibles.'));
+      body: orderListAsync.when(
+        data: (orders) {
+          if (orders.isEmpty) {
+            return const Center(child: Text('No hay órdenes disponibles.'));
           }
-          return _ClientListView(clients: clients);
+          return _OrderListView(orders: orders);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(child: Text('Error: $error')),
@@ -39,27 +39,27 @@ class ClientScreen extends ConsumerWidget {
   }
 }
 
-class _ClientListView extends StatelessWidget {
-  final List<ClientModel> clients;
+class _OrderListView extends StatelessWidget {
+  final List<OrderModel> orders;
 
-  const _ClientListView({required this.clients});
+  const _OrderListView({required this.orders});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: clients.length,
+      itemCount: orders.length,
       itemBuilder: (context, index) {
-        final client = clients[index];
-        return _ClientTile(client: client);
+        final order = orders[index];
+        return _OrderTile(order: order);
       },
     );
   }
 }
 
-class _ClientTile extends StatelessWidget {
-  final ClientModel client;
+class _OrderTile extends StatelessWidget {
+  final OrderModel order;
 
-  const _ClientTile({required this.client});
+  const _OrderTile({required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +69,20 @@ class _ClientTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       elevation: 5,
       child: ListTile(
-        leading: const Icon(Icons.person, size: 30),
+        leading: const Icon(Icons.receipt_long, size: 30),
         title: Text(
-          '${client.names} ${client.lastNames}',
+          'Orden ${order.friendlyId}',
           style: TextStyle(fontWeight: FontWeight.bold, color: colors.primary),
         ),
-        subtitle: Text(client.tel ?? 'Sin teléfono'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Fecha: ${order.date.toLocal()}'),
+            Text('Cliente: ${order.client.names} ${order.client.lastNames}'),
+            if (order.invoiceNumber != null)
+              Text('Factura: ${order.invoiceNumber}'),
+          ],
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -82,36 +90,35 @@ class _ClientTile extends StatelessWidget {
               icon: const Icon(Icons.edit, color: Colors.blue),
               onPressed: () {
                 context.goNamed(
-                  'clients-detail',
-                  pathParameters: {'id': client.id.toString()},
-                  extra: client,
+                  'order-detail',
+                  pathParameters: {'id': order.id.toString()},
+                  extra: order,
                 );
               },
             ),
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _deleteClient(context, client.id),
+              onPressed: () => _deleteOrder(context, order.id.toString()),
             ),
           ],
         ),
-onTap: () {
-  context.goNamed(
-    'client-orders',
-    pathParameters: {'clientId': client.id.toString()},
-    extra: client.id,
-  );
-}
+        onTap: () {
+          context.goNamed(
+            'order-detail',
+            pathParameters: {'id': order.id.toString()},
+            extra: order,
+          );
+        },
       ),
     );
   }
 
-  void _deleteClient(BuildContext context, int clientId) async {
+  void _deleteOrder(BuildContext context, String orderId) async {
     bool? confirm = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Confirmar eliminación'),
-        content:
-            const Text('¿Estás seguro de que deseas eliminar este cliente?'),
+        content: const Text('¿Estás seguro de que deseas eliminar esta orden?'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -126,14 +133,12 @@ onTap: () {
     );
 
     if (confirm == true) {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Cliente con ID $clientId eliminado')),
+        SnackBar(content: Text('Orden con ID $orderId eliminada')),
       );
-      // Eliminar cliente del estado
-      // ignore: use_build_context_synchronously
+      // Eliminar orden del estado
       final ref = ProviderScope.containerOf(context);
-      ref.read(clientListProvider.notifier).removeClient(clientId);
+      ref.read(orderRepositoryProvider).deleteOrder(orderId);
     }
   }
 }

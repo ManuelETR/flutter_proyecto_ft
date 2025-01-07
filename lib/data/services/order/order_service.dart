@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
 
 class OrderService {
@@ -19,10 +20,14 @@ class OrderService {
 Future<OrderModel> getOrder(String id) async {
     try {
       DocumentSnapshot doc = await _ordersCollection.doc(id).get();
-      print('Documento obtenido: ${doc.data()}');
+      if (kDebugMode) {
+        print('Documento obtenido: ${doc.data()}');
+      }
       return OrderModel.fromFirestore(doc);
     } catch (e) {
-      print('Error al obtener la orden: $e');
+      if (kDebugMode) {
+        print('Error al obtener la orden: $e');
+      }
       rethrow;
     }
   }
@@ -30,17 +35,25 @@ Future<OrderModel> getOrder(String id) async {
   Stream<List<OrderModel>> getOrders() {
     try {
       return _ordersCollection.snapshots().map((snapshot) {
-        print('Documentos obtenidos: ${snapshot.docs.length}');
+        if (kDebugMode) {
+          print('Documentos obtenidos: ${snapshot.docs.length}');
+        }
         return snapshot.docs.map((doc) => OrderModel.fromFirestore(doc)).toList();
       });
     } catch (e) {
-      print('Error al obtener las órdenes: $e');
+      if (kDebugMode) {
+        print('Error al obtener las órdenes: $e');
+      }
       rethrow;
     }
   }
 
-  Future<List<OrderModel>> getClientOrders(int clientId) async {
-    QuerySnapshot querySnapshot = await _ordersCollection.where('clientId', isEqualTo: clientId).get();
-    return querySnapshot.docs.map((doc) => OrderModel.fromFirestore(doc)).toList();
+Future<List<OrderModel>> getClientOrders(DocumentReference clientRef) async {
+  QuerySnapshot querySnapshot = await _ordersCollection.where('clientId', isEqualTo: clientRef).get();
+  if (kDebugMode) {
+    print('Documentos filtrados: ${querySnapshot.docs.map((doc) => doc.data())}');
   }
+  return querySnapshot.docs.map((doc) => OrderModel.fromFirestore(doc)).toList();
+}
+
 }

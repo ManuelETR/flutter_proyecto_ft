@@ -16,6 +16,7 @@ class OrderForm extends ConsumerStatefulWidget {
   const OrderForm({super.key, required this.onSave});
 
   @override
+  // ignore: library_private_types_in_public_api
   _OrderFormState createState() => _OrderFormState();
 }
 
@@ -274,6 +275,7 @@ class _OrderFormState extends ConsumerState<OrderForm> {
                       await FirebaseFirestore.instance.collection('maintenances').doc(maintenance.id.toString()).set(maintenance.toMap());
                     }
 
+                    // ignore: use_build_context_synchronously
                     Navigator.of(context).pop();
                   }
                 },

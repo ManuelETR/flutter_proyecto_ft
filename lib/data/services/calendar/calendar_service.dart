@@ -1,6 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_proyecto_ft/data/services/auth/auth_service.dart';
 import 'package:googleapis/calendar/v3.dart' as calendar;
-import 'package:googleapis_auth/auth_io.dart';
 
 
 class CalendarService {
@@ -11,10 +11,14 @@ class CalendarService {
       final client = await _authService.getCalendarClient();
       final calendarApi = calendar.CalendarApi(client);
       final events = await calendarApi.events.list('primary');
-      print('Eventos obtenidos: ${events.items}');
+      if (kDebugMode) {
+        print('Eventos obtenidos: ${events.items}');
+      }
       return events.items ?? [];
     } catch (e) {
-      print('Error al obtener eventos: $e');
+      if (kDebugMode) {
+        print('Error al obtener eventos: $e');
+      }
       rethrow;
     }
   }
@@ -25,7 +29,9 @@ class CalendarService {
       final calendarApi = calendar.CalendarApi(client);
       await calendarApi.events.insert(event, 'primary');
     } catch (e) {
-      print('Error al agregar evento: $e');
+      if (kDebugMode) {
+        print('Error al agregar evento: $e');
+      }
       rethrow;
     }
   }

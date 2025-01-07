@@ -16,17 +16,11 @@ class ClientListNotifier extends StateNotifier<AsyncValue<List<ClientModel>>> {
 
   Future<void> _loadClients() async {
     try {
-      // Cambia el estado a `loading`
-      state = const AsyncValue.loading();
-
-      // Carga los clientes desde el servicio
-      List<ClientModel> clients = await _clientService.getAllClients();
-
-      // Cambia el estado a `data` con los clientes cargados
-      state = AsyncValue.data(clients);
+      state = const AsyncValue.loading(); // Cambia el estado a loading
+      final List<ClientModel> clients = await _clientService.getAllClients();
+      state = AsyncValue.data(clients); // Cambia el estado a data con los clientes
     } catch (e, stack) {
-      // Cambia el estado a `error` si ocurre un problema
-      state = AsyncValue.error(e, stack);
+      state = AsyncValue.error(e, stack); // Cambia el estado a error si algo sale mal
       if (kDebugMode) {
         print("Error loading clients: $e");
       }
@@ -37,15 +31,15 @@ class ClientListNotifier extends StateNotifier<AsyncValue<List<ClientModel>>> {
     try {
       await _clientService.addClient(client);
 
-      // Si el estado actual es `data`, agrega el cliente al estado existente
+      // Solo actualiza el estado si está en `data`
       state.whenData((clients) {
         state = AsyncValue.data([...clients, client]);
       });
     } catch (e, stack) {
+      state = AsyncValue.error(e, stack);
       if (kDebugMode) {
         print("Error adding client: $e");
       }
-      state = AsyncValue.error(e, stack);
     }
   }
 
@@ -53,15 +47,15 @@ class ClientListNotifier extends StateNotifier<AsyncValue<List<ClientModel>>> {
     try {
       await _clientService.deleteClient(clientId);
 
-      // Si el estado actual es `data`, elimina el cliente del estado
+      // Solo actualiza el estado si está en `data`
       state.whenData((clients) {
         state = AsyncValue.data(clients.where((client) => client.id != clientId).toList());
       });
     } catch (e, stack) {
+      state = AsyncValue.error(e, stack);
       if (kDebugMode) {
         print("Error removing client: $e");
       }
-      state = AsyncValue.error(e, stack);
     }
   }
 }

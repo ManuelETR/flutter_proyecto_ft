@@ -26,7 +26,9 @@ class _SideMenuState extends State<SideMenu> {
           navDrawerIndex = value;
         });
 
-        final selectedItem = appMenuItemsSecondary[value];
+        // Lista combinada de opciones principales y secundarias
+        final allMenuItems = [...appMenuItemsMain, ...appMenuItemsSecondary];
+        final selectedItem = allMenuItems[value];
 
         // Si es 'Cerrar sesión', mostramos el diálogo de logout
         if (selectedItem.key == 'logout') {
@@ -34,7 +36,7 @@ class _SideMenuState extends State<SideMenu> {
           await logoutDialog.show();
         } else if (selectedItem.link.isNotEmpty) {
           // Cerrar el drawer antes de hacer la navegación
-          Navigator.pop(context); // Esto cierra el drawer
+          Navigator.pop(context);
 
           // Realizamos la navegación a la sección deseada
           context.push(selectedItem.link);
@@ -43,6 +45,29 @@ class _SideMenuState extends State<SideMenu> {
       children: [
         Padding(
           padding: EdgeInsets.fromLTRB(28, hasNotch ? 0 : 20, 16, 10),
+        ),
+        // Opciones principales
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Text(
+            'Opciones principales',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+        ),
+        ...appMenuItemsMain.map((item) => NavigationDrawerDestination(
+              icon: Icon(item.icon),
+              label: Text(item.title),
+            )),
+
+        const Divider(), // Separador entre principales y secundarias
+
+        // Opciones secundarias
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Text(
+            'Opciones secundarias',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
         ),
         ...appMenuItemsSecondary.map((item) => NavigationDrawerDestination(
               icon: Icon(item.icon),

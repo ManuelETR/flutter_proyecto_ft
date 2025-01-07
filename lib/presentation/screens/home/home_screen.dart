@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_proyecto_ft/config/menu-items/menu-items.dart';
 import 'package:flutter_proyecto_ft/presentation/widgets/generales/side_menu.dart';
-import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String name = "home_screen";
@@ -10,7 +8,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
@@ -27,50 +24,31 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: const _HomeView(),
-      endDrawer: SideMenu( scaffoldKey: scaffoldKey), // Aquí integraremos el SideMenu
+      body: const _AlertsView(), // Aquí va la lista de alertas
+      endDrawer: SideMenu(scaffoldKey: scaffoldKey),
     );
   }
 }
 
-class _HomeView extends StatelessWidget {
-  const _HomeView();
+class _AlertsView extends StatelessWidget {
+  const _AlertsView();
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: appMenuItemsMain.length,
-      itemBuilder: (context, index) {
-        final menuItem = appMenuItemsMain[index];
-
-        return _CustomListTile(menuItem: menuItem);
-      },
-    );
-  }
-}
-
-class _CustomListTile extends StatelessWidget {
-  const _CustomListTile({
-    required this.menuItem,
-  });
-
-  final MenuItem menuItem;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return ListTile(
-      leading: Icon(menuItem.icon, color: colors.primary, size: 30),
-      trailing: Icon(Icons.arrow_forward_ios_rounded, color: colors.primary),
-      title: Text(
-        menuItem.title,
-        style: TextStyle(fontWeight: FontWeight.bold, color: colors.secondary),
+    // Aquí puedes implementar la lógica de las alertas
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.warning_amber_rounded, size: 50, color: Colors.orange),
+          SizedBox(height: 10),
+          Text(
+            "Aquí aparecerán las alertas de trabajos próximos.",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
-      subtitle: Text(menuItem.subTitle),
-      onTap: () {
-        context.push(menuItem.link);
-      },
     );
   }
 }

@@ -76,16 +76,11 @@ final appRouter = GoRouter(
     //   builder: (context, state) => const RegisterMaintenanceScreen(),
     // ),
     GoRoute(
-      path: '/clients-pending',
-      name: ClientsPendingScreen.name,
-      builder: (context, state) => const ClientsPendingScreen(),
-    ),
+        name: OrderScreen.name,
+        path: '/orders',
+        builder: (context, state) => const OrderScreen()),
+
     GoRoute(
-      path: '/clients-history',
-      name: ClientsHistoryScreen.name,
-      builder: (context, state) => const ClientsHistoryScreen(),
-    ),
-   GoRoute(
       path: '/clients/:id',
       name: 'clients-detail',
       builder: (context, state) {

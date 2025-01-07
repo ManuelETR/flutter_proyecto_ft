@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_proyecto_ft/data/models/client_model.dart';
-import 'package:flutter_proyecto_ft/data/models/order_model.dart';
-import 'package:flutter_proyecto_ft/data/services/order/order_service.dart';
 import 'package:flutter_proyecto_ft/data/services/clients/clients_service.dart';
 import 'package:flutter_proyecto_ft/presentation/widgets/forms/client_form.dart';
 import 'package:go_router/go_router.dart';
@@ -19,15 +17,6 @@ class ClientDetailScreen extends StatefulWidget {
 }
 
 class _ClientDetailScreenState extends State<ClientDetailScreen> {
-  Future<List<OrderModel>> fetchClientOrders(int clientId) async {
-    try {
-      return await OrderService().getClientOrders(clientId);
-    } catch (e) {
-      // Manejar el error y devolver una lista vacía
-      return [];
-    }
-  }
-
   Future<void> _refreshClient() async {
     final updatedClient = await ClientService().getClient(widget.client.id);
     if (updatedClient != null) {
@@ -36,7 +25,6 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
         widget.client.lastNames = updatedClient.lastNames;
         widget.client.tel = updatedClient.tel;
         widget.client.address = updatedClient.address;
-        widget.client.orderIds = updatedClient.orderIds;
       });
     }
   }
@@ -101,45 +89,10 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
             _buildInfoRow('ID:', widget.client.id.toString()),
             _buildInfoRow('Nombre:', '${widget.client.names} ${widget.client.lastNames}'),
             _buildInfoRow('Teléfono:', widget.client.tel ?? 'No disponible'),
-            _buildInfoRow('Dirección:', '${widget.client.address.street}, ${widget.client.address.number}, ${widget.client.address.neighborhood}, ${widget.client.address.postalCode}'),
-            const SizedBox(height: 24.0),
-            Text(
-              'Órdenes',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-            ),
-            const SizedBox(height: 8.0),
-            FutureBuilder<List<OrderModel>>(
-              future: fetchClientOrders(widget.client.id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (snapshot.hasData) {
-                  final orders = snapshot.data!;
-                  if (orders.isEmpty) {
-                    return const Center(child: Text('No hay órdenes para este cliente.'));
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: orders.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          title: Text('Orden #${orders[index].friendlyId}'),
-                          subtitle: Text('Fecha: ${orders[index].date}\nNúmero de Factura: ${orders[index].invoiceNumber ?? 'No disponible'}'),
-                        ),
-                      );
-                    },
-                  );
-                }
-                return const Center(child: Text('No hay órdenes para este cliente.'));
-              },
+            _buildInfoRow(
+              'Dirección:',
+              '${widget.client.address.street}, ${widget.client.address.number}, '
+              '${widget.client.address.neighborhood}, ${widget.client.address.postalCode}',
             ),
           ],
         ),

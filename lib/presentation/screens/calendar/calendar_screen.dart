@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:googleapis/calendar/v3.dart' as calendar;
@@ -10,6 +11,7 @@ class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CalendarScreenState createState() => _CalendarScreenState();
 }
 
@@ -104,7 +106,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             flex: 1,
             child: eventsAsyncValue.when(
               data: (events) {
-                print('Eventos obtenidos: $events');
+                if (kDebugMode) {
+                  print('Eventos obtenidos: $events');
+                }
                 _events = {};
                 for (var event in events) {
                   final eventDate = event.start?.dateTime ?? event.start?.date;
@@ -137,7 +141,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               },
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) {
-                print('Error al cargar los eventos: $err');
+                if (kDebugMode) {
+                  print('Error al cargar los eventos: $err');
+                }
                 return const Center(child: Text('Error al cargar los eventos'));
               },
             ),

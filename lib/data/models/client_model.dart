@@ -51,6 +51,7 @@ class ClientModel extends Client {
   }
 
   // Convertir ClientModel a Client
+  @override
   Client toClient() {
     return Client(
       id: id,
