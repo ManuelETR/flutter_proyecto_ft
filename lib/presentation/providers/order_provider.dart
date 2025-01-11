@@ -1,6 +1,6 @@
+import 'package:flutter_proyecto_ft/domain/repositories/order_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
-import 'package:flutter_proyecto_ft/data/repositories/order_repository.dart';
 import 'package:flutter_proyecto_ft/data/services/order/firestore_order_repository.dart';
 
 final orderRepositoryProvider = Provider<OrderRepository>((ref) {
@@ -12,7 +12,13 @@ final orderListProvider = StreamProvider<List<OrderModel>>((ref) {
   return orderRepository.getOrders();
 });
 
-final orderProvider = FutureProvider.family<OrderModel, String>((ref, id) {
+
+final orderProvider = StreamProvider<List<OrderModel>>((ref) {
+  final repository = ref.watch(orderRepositoryProvider);
+  return repository.getOrders();
+});
+
+final filteredOrdersProvider = StreamProvider.family<List<OrderModel>, String>((ref, type) {
   final orderRepository = ref.watch(orderRepositoryProvider);
-  return orderRepository.getOrder(id);
+  return orderRepository.getOrders().map((orders) => orders.where((order) => order.type == type).toList());
 });

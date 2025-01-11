@@ -18,7 +18,6 @@ class InstallationModel extends Installation {
           product: product.toProduct(),
         );
 
-  // Convertir de Firestore a un objeto InstallationModel
   factory InstallationModel.fromFirestore(DocumentSnapshot doc) {
     var data = doc.data() as Map<String, dynamic>;
     return InstallationModel(
@@ -32,7 +31,6 @@ class InstallationModel extends Installation {
     );
   }
 
-  // Convertir un objeto InstallationModel a un mapa para Firestore
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -45,7 +43,6 @@ class InstallationModel extends Installation {
     };
   }
 
-  // Convertir Installation a InstallationModel
   factory InstallationModel.fromInstallation(Installation installation) {
     return InstallationModel(
       id: installation.id,
@@ -58,9 +55,10 @@ class InstallationModel extends Installation {
     );
   }
 
-  get friendlyId => null;
+  String get friendlyId => id.toString();
+  String get name => "Installation $id";
+  String get description => notes ?? "No description available";
 
-  // Convertir InstallationModel a Installation
   Installation toInstallation() {
     return Installation(
       id: id,

@@ -4,32 +4,41 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_proyecto_ft/data/models/order_model.dart';
 import 'package:flutter_proyecto_ft/presentation/providers/order_provider.dart';
 
-class OrderScreen extends ConsumerWidget {
+class OrderScreen extends ConsumerStatefulWidget {
   static const String name = "order_screen";
 
   const OrderScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final orderListAsync = ref.watch(orderListProvider);
+  // ignore: library_private_types_in_public_api
+  _OrderScreenState createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends ConsumerState<OrderScreen> {
+  String selectedType = 'installation';
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredOrdersAsync = ref.watch(filteredOrdersProvider(selectedType));
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/home'), // Navega explícitamente a la ruta de Home
+        title: DropdownButton<String>(
+          value: selectedType,
+          items: const [
+            DropdownMenuItem(value: 'installation', child: Text('Instalaciones')),
+            DropdownMenuItem(value: 'maintenance', child: Text('Mantenimientos')),
+          ],
+          onChanged: (value) {
+            if (value != null) {
+              setState(() => selectedType = value);
+            }
+          },
         ),
-        title: const Text(
-          'Lista de Órdenes',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color.fromARGB(255, 222, 220, 219),
       ),
-      body: orderListAsync.when(
+      body: filteredOrdersAsync.when(
         data: (orders) {
-          if (orders.isEmpty) {
-            return const Center(child: Text('No hay órdenes disponibles.'));
-          }
+          if (orders.isEmpty) return const Center(child: Text('No hay órdenes disponibles.'));
           return _OrderListView(orders: orders);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -38,6 +47,7 @@ class OrderScreen extends ConsumerWidget {
     );
   }
 }
+
 
 class _OrderListView extends StatelessWidget {
   final List<OrderModel> orders;
@@ -133,10 +143,12 @@ class _OrderTile extends StatelessWidget {
     );
 
     if (confirm == true) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Orden con ID $orderId eliminada')),
       );
       // Eliminar orden del estado
+      // ignore: use_build_context_synchronously
       final ref = ProviderScope.containerOf(context);
       ref.read(orderRepositoryProvider).deleteOrder(orderId);
     }

@@ -12,7 +12,7 @@ class ClientModel extends Client {
     required super.orderIds,
   });
 
-  // Convertir el modelo de datos a un mapa para Firestore
+  // Convertir el modelo a un mapa para Firestore
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -24,7 +24,7 @@ class ClientModel extends Client {
     };
   }
 
-  // Convertir de un documento de Firestore a ClientModel
+  // Crear un ClientModel desde un documento de Firestore
   factory ClientModel.fromFirestore(DocumentSnapshot doc) {
     var data = doc.data() as Map<String, dynamic>;
 
@@ -38,7 +38,7 @@ class ClientModel extends Client {
     );
   }
 
-  // Convertir Client a ClientModel
+  // Crear un ClientModel desde un objeto Client
   factory ClientModel.fromClient(Client client) {
     return ClientModel(
       id: client.id,
@@ -51,14 +51,13 @@ class ClientModel extends Client {
   }
 
   // Convertir ClientModel a Client
-  @override
   Client toClient() {
     return Client(
       id: id,
       names: names,
       lastNames: lastNames,
       tel: tel,
-      address: address,
+      address: (address as AddressModel).toAddress(),
       orderIds: orderIds,
     );
   }

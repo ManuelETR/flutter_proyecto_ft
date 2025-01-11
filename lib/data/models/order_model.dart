@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_proyecto_ft/data/models/addres_model.dart';
 import 'package:flutter_proyecto_ft/domain/entities/order.dart';
 import 'package:flutter_proyecto_ft/data/models/client_model.dart';
 
@@ -26,7 +27,7 @@ class OrderModel extends OrderC {
       'id': id,
       'clientId': client.id,
       'friendlyId': friendlyId,
-      'date': date.toIso8601String(),
+      'date': Timestamp.fromDate(date),  // Convertir DateTime a Timestamp
       'invoiceNumber': invoiceNumber,
       'installationRef': installationRef,
       'maintenanceRef': maintenanceRef,
@@ -34,21 +35,40 @@ class OrderModel extends OrderC {
     };
   }
 
-  // Convertir de un documento de Firestore a OrderModel
-  factory OrderModel.fromFirestore(DocumentSnapshot doc) {
-    var data = doc.data() as Map<String, dynamic>;
+factory OrderModel.fromFirestore(DocumentSnapshot doc) {
+  final data = doc.data() as Map<String, dynamic>;
 
-    return OrderModel(
-      id: int.parse(doc.id),
-      client: ClientModel.fromFirestore(data['clientId']),
-      friendlyId: data['friendlyId'],
-      date: DateTime.parse(data['date']),
-      invoiceNumber: data['invoiceNumber'],
-      installationRef: data['installationRef'],
-      maintenanceRef: data['maintenanceRef'],
-      type: data['type'],
-    );
+  // Manejar el campo 'date'
+  var date = data['date'];
+  if (date is String) {
+    date = DateTime.tryParse(date);
+  } else if (date is Timestamp) {
+    date = (date).toDate();
   }
+
+  return OrderModel(
+    id: doc.id,
+    client: ClientModel(
+      id: data['clientId'] is int ? data['clientId'] : 0, // Manejo de clientId
+      names: '', // Manejar nombres vacíos si no están presentes
+      lastNames: '',
+      address: AddressModel.empty(),
+      orderIds: [],
+    ),
+    friendlyId: data['friendlyId'] ?? '', // Manejo de nulos con un valor por defecto
+    date: date as DateTime? ?? DateTime.now(), // Manejo de fechas nulas con valor por defecto
+    invoiceNumber: data['invoiceNumber'] ?? '', // Manejo de nulos con un valor por defecto
+    installationRef: data['installationRef'] is DocumentReference
+        ? data['installationRef']
+        : null, // Validar el tipo de dato
+    maintenanceRef: data['maintenanceRef'] is DocumentReference
+        ? data['maintenanceRef']
+        : null, // Validar el tipo de dato
+    type: data['type'] ?? '', // Manejar nulos con un valor por defecto
+  );
+}
+
+
 
   // Convertir OrderC a OrderModel
   factory OrderModel.fromOrderC(OrderC order) {
@@ -64,6 +84,7 @@ class OrderModel extends OrderC {
     );
   }
 
+  // ignore: unrelated_type_equality_checks
   bool get isEmpty => id == 0;
 
   get length => null;
@@ -72,7 +93,7 @@ class OrderModel extends OrderC {
   OrderC toOrderC() {
     return OrderC(
       id: id,
-      client: client.toClient(),
+      client: client,
       friendlyId: friendlyId,
       date: date,
       invoiceNumber: invoiceNumber,

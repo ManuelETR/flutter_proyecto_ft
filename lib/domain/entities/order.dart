@@ -3,7 +3,7 @@ import 'package:flutter_proyecto_ft/domain/entities/installation.dart';
 import 'package:flutter_proyecto_ft/domain/entities/maintenance.dart';
 
 class OrderC {
-  final int id;
+  final String id;
   final Client client;
   final String friendlyId;
   final DateTime date;

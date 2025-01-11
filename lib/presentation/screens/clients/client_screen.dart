@@ -95,11 +95,6 @@ class _ClientTile extends StatelessWidget {
           ],
         ),
 onTap: () {
-  context.goNamed(
-    'client-orders',
-    pathParameters: {'clientId': client.id.toString()},
-    extra: client.id,
-  );
 }
       ),
     );

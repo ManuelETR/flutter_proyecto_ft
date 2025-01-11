@@ -16,7 +16,6 @@ class OrderForm extends ConsumerStatefulWidget {
   const OrderForm({super.key, required this.onSave});
 
   @override
-  // ignore: library_private_types_in_public_api
   _OrderFormState createState() => _OrderFormState();
 }
 
@@ -225,7 +224,7 @@ class _OrderFormState extends ConsumerState<OrderForm> {
                         ? InstallationModel(
                             id: DateTime.now().millisecondsSinceEpoch,
                             order: OrderModel(
-                              id: DateTime.now().millisecondsSinceEpoch,
+                              id: DateTime.now().millisecondsSinceEpoch.toString(),
                               client: _selectedClient!,
                               friendlyId: _friendlyIdController.text,
                               date: DateTime.parse(_dateController.text),
@@ -243,7 +242,7 @@ class _OrderFormState extends ConsumerState<OrderForm> {
                         ? MaintenanceModel(
                             id: DateTime.now().millisecondsSinceEpoch,
                             order: OrderModel(
-                              id: DateTime.now().millisecondsSinceEpoch,
+                              id: DateTime.now().millisecondsSinceEpoch.toString(),
                               client: _selectedClient!,
                               friendlyId: _friendlyIdController.text,
                               date: DateTime.parse(_dateController.text),
@@ -255,7 +254,7 @@ class _OrderFormState extends ConsumerState<OrderForm> {
                         : null;
 
                     final newOrder = OrderModel(
-                      id: DateTime.now().millisecondsSinceEpoch,
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
                       client: _selectedClient!,
                       friendlyId: _friendlyIdController.text,
                       date: DateTime.parse(_dateController.text),
@@ -274,12 +273,9 @@ class _OrderFormState extends ConsumerState<OrderForm> {
                     if (maintenance != null) {
                       await FirebaseFirestore.instance.collection('maintenances').doc(maintenance.id.toString()).set(maintenance.toMap());
                     }
-
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pop();
                   }
                 },
-                child: const Text('Guardar Orden'),
+                child: const Text('Guardar'),
               ),
             ],
           ),

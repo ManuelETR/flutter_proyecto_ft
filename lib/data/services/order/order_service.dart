@@ -6,8 +6,13 @@ class OrderService {
   final CollectionReference _ordersCollection = FirebaseFirestore.instance.collection('orders');
 
   Future<void> addOrder(OrderModel order) async {
+  try {
     await _ordersCollection.add(order.toMap());
+  } catch (e) {
+    debugPrint('Error al agregar la orden: $e');
+    rethrow;
   }
+}
 
   Future<void> updateOrder(String id, OrderModel order) async {
     await _ordersCollection.doc(id).update(order.toMap());
@@ -48,11 +53,8 @@ Future<OrderModel> getOrder(String id) async {
     }
   }
 
-Future<List<OrderModel>> getClientOrders(DocumentReference clientRef) async {
-  QuerySnapshot querySnapshot = await _ordersCollection.where('clientId', isEqualTo: clientRef).get();
-  if (kDebugMode) {
-    print('Documentos filtrados: ${querySnapshot.docs.map((doc) => doc.data())}');
-  }
+Future<List<OrderModel>> getClientOrders(int clientId) async {
+  final querySnapshot = await _ordersCollection.where('clientId', isEqualTo: clientId).get();
   return querySnapshot.docs.map((doc) => OrderModel.fromFirestore(doc)).toList();
 }
 

@@ -8,6 +8,16 @@ class AddressModel extends Address {
     required super.postalCode,
   });
 
+  // Método estático para crear una instancia con valores vacíos
+  factory AddressModel.empty() {
+    return AddressModel(
+      street: '',
+      number: '',
+      neighborhood: '',
+      postalCode: 0, // Usamos 0 como valor predeterminado para un int
+    );
+  }
+
   // Convertir el modelo de datos a un mapa para Firestore
   Map<String, dynamic> toMap() {
     return {
