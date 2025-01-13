@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_proyecto_ft/presentation/widgets/alertV/alert_list_widget.dart';
 import 'package:flutter_proyecto_ft/presentation/widgets/generales/side_menu.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -24,31 +25,8 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: const _AlertsView(), // Aquí va la lista de alertas
+      body: AlertListWidget(), // Aquí integramos el AlertListWidget
       endDrawer: SideMenu(scaffoldKey: scaffoldKey),
-    );
-  }
-}
-
-class _AlertsView extends StatelessWidget {
-  const _AlertsView();
-
-  @override
-  Widget build(BuildContext context) {
-    // Aquí puedes implementar la lógica de las alertas
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.warning_amber_rounded, size: 50, color: Colors.orange),
-          SizedBox(height: 10),
-          Text(
-            "Aquí aparecerán las alertas de trabajos próximos.",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
     );
   }
 }

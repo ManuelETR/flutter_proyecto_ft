@@ -195,16 +195,16 @@ class _OrderFormState extends ConsumerState<OrderForm> {
                   },
                 ),
               ],
-              CheckboxListTile(
-                title: const Text('Mantenimiento'),
-                value: _isMaintenance,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _isMaintenance = value ?? false;
-                    if (_isMaintenance) _isInstallation = false;
-                  });
-                },
-              ),
+              // CheckboxListTile(
+              //   title: const Text('Mantenimiento'),
+              //   value: _isMaintenance,
+              //   onChanged: (bool? value) {
+              //     setState(() {
+              //       _isMaintenance = value ?? false;
+              //       if (_isMaintenance) _isInstallation = false;
+              //     });
+              //   },
+              // ),
               if (_isMaintenance)
                 TextFormField(
                   controller: _maintenanceDescriptionController,

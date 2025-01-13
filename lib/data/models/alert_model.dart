@@ -1,35 +1,37 @@
-import 'package:flutter_proyecto_ft/domain/entities/alert.dart';
-import 'package:flutter_proyecto_ft/data/models/order_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AlertModel extends Alert {
+class AlertModel {
+  final String id;
+  final String orderId;
+  final DateTime alertDate;
+  final String message;
+
   AlertModel({
-    required super.id,
-    required OrderModel order,
-    super.isIgnored,
-    super.snoozeDate,
-  }) : super(
-          order: order.toOrderC(),
-        );
+    required this.id,
+    required this.orderId,
+    required this.alertDate,
+    required this.message,
+  });
 
-  // Convertir de Firestore a un objeto AlertModel
-  factory AlertModel.fromFirestore(DocumentSnapshot doc) {
-    var data = doc.data() as Map<String, dynamic>;
-    return AlertModel(
-      id: data['id'],
-      order: OrderModel.fromFirestore(data['order']),
-      isIgnored: data['isIgnored'],
-      snoozeDate: (data['snoozeDate'] as Timestamp?)?.toDate(),
-    );
-  }
-
-  // Convertir un objeto AlertModel a un mapa para Firestore
+  // Convertir el modelo a un mapa para Firestore
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'order': (order as OrderModel).toMap(),
-      'isIgnored': isIgnored,
-      'snoozeDate': snoozeDate,
+      'orderId': orderId,
+      'alertDate': Timestamp.fromDate(alertDate),
+      'message': message,
     };
+  }
+
+  // Crear un modelo a partir de Firestore
+  factory AlertModel.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+
+    return AlertModel(
+      id: doc.id,
+      orderId: data['orderId'] ?? '',
+      alertDate: (data['alertDate'] as Timestamp).toDate(),
+      message: data['message'] ?? '',
+    );
   }
 }

@@ -30,7 +30,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
           value: selectedType,
           items: const [
             DropdownMenuItem(value: 'installation', child: Text('Instalaciones')),
-            DropdownMenuItem(value: 'maintenance', child: Text('Mantenimientos')),
+            //DropdownMenuItem(value: 'maintenance', child: Text('Mantenimientos')),
           ],
           onChanged: (value) {
             if (value != null) {
